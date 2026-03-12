@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WANTED. | El mercado inverso de Latinoamérica</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+<body class="bg-black text-gray-100 font-sans">
+
+<div id="root"></div>
+
+<script type="text/babel">
+    const { useState } = React;
+
+    // --- CONFIGURACIÓN DE PAGO (dLocal Go) ---
+    const DLOCAL_PAYMENT_LINK = "https://checkout.dlocalgo.com/p/TU_LINK_AQUI";
+    const PRECIO_OFERTA = "3.73";
+
+    function WantedApp() {
+        const [posts, setPosts] = useState([
+            { id: 1, title: 'Repuestos Toyota Hilux', budget: '450', location: 'Asunción, PY', description: 'Busco kit de embrague nuevo.', phone: '5491100000000' },
+            { id: 2, title: 'Diseño Web Next.js', budget: '800', location: 'Lima, PE', description: 'Busco experto para ecommerce.', phone: '51999000000' }
+        ]);
+
+        const [isPro, setIsPro] = useState(false);
+
+        const handleOffer = (post) => {
+            if (!isPro) {
+                const proceed = confirm(`OPORTUNIDAD DE VENTA:\n\nPara acceder al contacto directo y ofertar por "${post.title}", debes abonar la tasa de conexión de $${PRECIO_OFERTA} USD.\n\n¿Ir a la pantalla de pago seguro?`);
+                
+                if (proceed) {
+                    if (DLOCAL_PAYMENT_LINK.includes("TU_LINK_AQUI")) {
+                        alert(`MODO PRUEBA: Simulando pago de $${PRECIO_OFERTA} USD exitoso.`);
+                        setIsPro(true);
+                    } else {
+                        window.open(DLOCAL_PAYMENT_LINK, "_blank");
+                    }
+                }
+            } else {
+                const mensaje = `Hola, vi tu pedido en WANTED: "${post.title}". Tengo una propuesta lista.`;
+                window.open(`https://wa.me/${post.phone}?text=${encodeURIComponent(mensaje)}`);
+            }
+        };
+
+        return (
+            <div className="min-h-screen">
+                <header className="p-6 border-b border-gray-800 bg-black/80 backdrop-blur-md sticky top-0 flex justify-between items-center z-50">
+                    <div>
+                        <h1 className="text-3xl font-black text-yellow-400 tracking-tighter uppercase italic">Wanted<span className="text-white">.</span></h1>
+                        <p className="text-[10px] text-gray-500 font-bold tracking-[0.3em] uppercase font-mono">Latam Connection</p>
+                    </div>
+                    {isPro && <span className="bg-yellow-400 text-black text-[10px] font-bold px-4 py-1.5 rounded-full uppercase tracking-widest animate-pulse shadow-[0_0_20px_rgba(250,204,21,0.4)]">Vendedor Verificado</span>}
+                </header>
+
+                <main className="max-w-6xl mx-auto p-6 grid grid-cols-1 lg:grid-cols-3 gap-10 mt-8">
+                    
+                    {/* PANEL DE PUBLICACIÓN */}
+                    <div className="lg:col-span-1">
+                        <div className="bg-gray-900 border border-gray-800 p-8 rounded-[2.5rem] shadow-2xl sticky top-28">
+                            <h2 className="text-2xl font-bold mb-2">Lanzar Pedido</h2>
+                            <p className="text-gray-500 text-xs mb-6 uppercase tracking-widest font-bold">Sin costo para compradores</p>
+                            
+                            <input type="text" placeholder="¿Qué necesitas comprar?" className="w-full mb-4 p-4 bg-black border border-gray-800 rounded-2xl focus:border-yellow-400 outline-none transition placeholder:text-gray-700" />
+                            <div className="grid grid-cols-2 gap-3 mb-4">
+                                <input type="number" placeholder="Presupuesto USD" className="w-full p-4 bg-black border border-gray-800 rounded-2xl focus:border-yellow-400 outline-none" />
+                                <input type="text" placeholder="Ciudad, País" className="w-full p-4 bg-black border border-gray-800 rounded-2xl focus:border-yellow-400 outline-none" />
+                            </div>
+                            <textarea placeholder="Especificaciones, marca, estado..." className="w-full h-32 mb-6 p-4 bg-black border border-gray-800 rounded-2xl focus:border-yellow-400 outline-none resize-none"></textarea>
+                            <button className="w-full py-4 bg-white text-black font-black rounded-2xl hover:bg-yellow-400 transition transform active:scale-95 shadow-xl">PUBLICAR AHORA</button>
+                        </div>
+                    </div>
+
+                    {/* MURO DE OPORTUNIDADES */}
+                    <div className="lg:col-span-2">
+                        <div className="flex justify-between items-center mb-8 border-l-4 border-yellow-400 pl-4">
+                            <h2 className="text-sm font-black text-gray-400 uppercase tracking-[0.2em]">Demandas en tiempo real</h2>
+                        </div>
+                        
+                        <div className="space-y-6">
+                            {posts.map(post => (
+                                <div key={post.id} className="bg-[#0a0a0a] border border-gray-800 p-8 rounded-[2.5rem] hover:border-gray-600 transition-all shadow-lg group">
+                                    <div className="flex justify-between items-start mb-4">
+                                        <h3 className="text-2xl font-bold group-hover:text-yellow-400 transition-colors tracking-tight">{post.title}</h3>
+                                        <div className="text-right">
+                                            <span className="block text-2xl font-mono font-bold text-white">${post.budget}</span>
+                                            <span className="text-[10px] text-gray-600 font-bold uppercase tracking-widest">Presupuesto</span>
+                                        </div>
+                                    </div>
+                                    <p className="text-gray-400 mb-8 leading-relaxed italic text-lg">"{post.description}"</p>
+                                    <div className="flex flex-col sm:flex-row justify-between items-center pt-6 border-t border-gray-900 gap-4">
+                                        <div className="flex items-center text-gray-500 font-bold text-xs uppercase tracking-widest">
+                                            <span className="mr-2 text-yellow-400 text-lg">📍</span> {post.location}
+                                        </div>
+                                        <button 
+                                            onClick={() => handleOffer(post)}
+                                            className={`w-full sm:w-auto px-10 py-4 rounded-2xl font-black text-xs uppercase tracking-tighter transition-all duration-300 ${isPro ? 'bg-yellow-400 text-black' : 'bg-gray-100 text-black hover:bg-yellow-400 hover:scale-105 shadow-xl'}`}
+                                        >
+                                            {isPro ? "Enviar Oferta (WhatsApp)" : `Ofertar por $${PRECIO_OFERTA}`}
+                                        </button>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </main>
+            </div>
+        );
+    }
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<WantedApp />);
+</script>
+</body>
+  </html>
