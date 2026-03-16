@@ -4,52 +4,89 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Formulario de Pedidos</title>
+    <title>Mis Pedidos</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        body { font-family: sans-serif; padding: 20px; background-color: #f4f4f4; }
-        form { background: white; padding: 20px; border-radius: 8px; max-width: 400px; margin: auto; }
-        input, button { width: 100%; padding: 10px; margin-top: 10px; border-radius: 5px; border: 1px solid #ccc; }
-        button { background-color: #3ecf8e; color: white; font-weight: bold; border: none; cursor: pointer; }
+        /* Aquí vuelve tu diseño */
+        body { 
+            background-color: #000000; 
+            color: #FFD700; 
+            font-family: 'Courier New', Courier, monospace; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            height: 100vh; 
+            margin: 0;
+        }
+        form { 
+            border: 2px solid #FFD700; 
+            padding: 30px; 
+            border-radius: 15px; 
+            width: 300px;
+            text-align: center;
+        }
+        h2 { margin-bottom: 20px; text-transform: uppercase; }
+        input { 
+            width: 90%; 
+            padding: 10px; 
+            margin-bottom: 15px; 
+            background: #222; 
+            border: 1px solid #FFD700; 
+            color: white;
+        }
+        button { 
+            width: 100%; 
+            padding: 12px; 
+            background-color: #FFD700; 
+            color: black; 
+            font-weight: bold; 
+            border: none; 
+            cursor: pointer;
+            text-transform: uppercase;
+        }
+        button:hover { background-color: #fff; }
     </style>
 </head>
 <body>
 
     <form id="orderForm">
-        <h2>Hacer un Pedido</h2>
-        <input type="text" id="nombre" placeholder="Tu nombre" required>
-        <input type="text" id="producto" placeholder="Producto" required>
-        <input type="number" id="cantidad" placeholder="Cantidad" required>
-        <button type="submit" id="submitBtn">Enviar Pedido</button>
+        <h2>Nuevo Pedido</h2>
+        <input type="text" id="nombre" placeholder="TU NOMBRE" required>
+        <input type="text" id="producto" placeholder="PRODUCTO" required>
+        <input type="number" id="cantidad" placeholder="CANTIDAD" required>
+        <button type="submit" id="submitBtn">ENVIAR AHORA</button>
     </form>
 
     <script>
-        // Configuración de TU Supabase
         const SUPABASE_URL = 'https://gtngqwnbyjqqmuzsztnv.supabase.co';
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd0bmdxd25ieWpxcW11enN6dG52Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMzNjgyMzksImV4cCI6MjA4ODk0NDIzOX0.vSxxHrayzEJG_HwRXcyOCb5vZuDZksrQe6GnAwhYD1w';
-        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        
+        // Inicialización correcta
+        const { createClient } = supabase;
+        const _supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
         const form = document.getElementById('orderForm');
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
             const btn = document.getElementById('submitBtn');
-            btn.innerText = 'Enviando...';
+            btn.innerText = 'PROCESANDO...';
 
             const nombre = document.getElementById('nombre').value;
             const producto = document.getElementById('producto').value;
-            const cantidad = document.getElementById('cantidad').value;
+            const cantidad = parseInt(document.getElementById('cantidad').value);
 
-            const { data, error } = await supabase
+            const { error } = await _supabase
                 .from('pedidos')
                 .insert([{ nombre, producto, cantidad }]);
 
             if (error) {
-                alert('Error: ' + error.message);
+                alert('Error al enviar: ' + error.message);
+                console.error(error);
             } else {
-                alert('¡Pedido enviado con éxito!');
+                alert('¡PEDIDO RECIBIDO CON ÉXITO!');
                 form.reset();
             }
-            btn.innerText = 'Enviar Pedido';
+            btn.innerText = 'ENVIAR AHORA';
         });
     </script>
 </body>
