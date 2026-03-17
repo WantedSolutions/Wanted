@@ -3,113 +3,162 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WANTED | Conexión Segura de Mercado</title>
+    <title>WANTED | Marketplace</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         :root {
             --amarillo: #FFD700;
             --negro-puro: #0a0a0a;
-            --negro-card: #121212;
-            --gris-texto: #8e8e93;
-            --verde-exito: #28a745;
+            --negro-card: #161616;
+            --gris-texto: #a0a0a0;
+            --blanco: #ffffff;
         }
 
         body { 
             background-color: var(--negro-puro); 
-            color: #ffffff; 
-            font-family: -apple-system, system-ui, sans-serif;
+            color: var(--blanco); 
+            font-family: 'Inter', -apple-system, sans-serif;
             margin: 0;
             display: flex;
             flex-direction: column;
             align-items: center;
+            min-height: 100vh;
         }
 
-        /* HEADER */
+        /* HEADER PREMIUM */
         header {
             width: 100%;
-            padding: 15px 30px;
+            padding: 20px 40px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: rgba(0,0,0,0.8);
-            border-bottom: 1px solid #333;
+            box-sizing: border-box;
+            border-bottom: 1px solid #222;
+            background: rgba(10, 10, 10, 0.9);
             position: sticky; top: 0; z-index: 100;
         }
 
-        .brand { font-size: 1.5rem; font-weight: 800; color: var(--amarillo); }
-        .secure-badge { font-size: 0.7rem; color: var(--verde-exito); border: 1px solid var(--verde-exito); padding: 4px 8px; border-radius: 20px; }
+        .brand-name { font-size: 1.8rem; font-weight: 800; color: var(--amarillo); text-transform: uppercase; letter-spacing: -1px; }
+        .logo-w { background-color: var(--amarillo); color: #000; font-weight: 900; font-size: 1.5rem; width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; border-radius: 8px; font-style: italic; }
 
-        /* FORMULARIO */
-        .hero-section { width: 95%; max-width: 480px; margin: 30px 0; background: var(--negro-card); padding: 30px; border-radius: 20px; border: 1px solid #222; }
-        .input-box { margin-bottom: 15px; }
-        label { display: block; font-size: 0.75rem; color: var(--gris-texto); margin-bottom: 6px; text-transform: uppercase; }
-        input { width: 100%; padding: 14px; background: #000; border: 1px solid #333; border-radius: 12px; color: #fff; box-sizing: border-box; }
-        button#submitBtn { width: 100%; padding: 16px; background: var(--amarillo); color: #000; font-weight: 800; border: none; border-radius: 12px; cursor: pointer; }
+        /* CONTENEDOR FORMULARIO */
+        .main-container { 
+            width: 95%; max-width: 480px; margin: 40px 0; 
+            background: var(--negro-card); padding: 40px; 
+            border-radius: 16px; border: 1px solid #222; 
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4); 
+        }
 
-        /* LISTA */
-        .feed-container { width: 95%; max-width: 480px; margin-bottom: 50px; }
-        .card { background: var(--negro-card); border: 1px solid #222; border-radius: 18px; padding: 20px; margin-bottom: 20px; }
-        .product-name { font-size: 1.2rem; font-weight: 700; color: var(--amarillo); }
-        .btn-offer { display: block; width: 100%; background: transparent; border: 2px solid var(--amarillo); color: var(--amarillo); padding: 12px; border-radius: 10px; font-weight: 700; cursor: pointer; text-decoration: none; text-align: center; margin-top: 15px; }
+        .descripcion-top { font-size: 0.9rem; color: var(--gris-texto); text-align: center; margin-bottom: 30px; line-height: 1.6; }
+
+        form { display: flex; flex-direction: column; gap: 20px; }
+        .input-group { display: flex; flex-direction: column; gap: 8px; }
+        label { font-size: 0.85rem; font-weight: 600; color: var(--blanco); text-transform: uppercase; letter-spacing: 0.5px; }
         
-        /* LEGAL FOOTER */
-        footer { padding: 20px; text-align: center; }
-        .legal-link { color: var(--gris-texto); font-size: 0.8rem; cursor: pointer; text-decoration: underline; }
+        input { 
+            padding: 16px; background-color: #000; border: 1px solid #333; 
+            border-radius: 10px; color: white; font-size: 1rem; transition: all 0.3s ease;
+        }
+        input:focus { border-color: var(--amarillo); outline: none; }
 
-        /* MODAL LEGAL */
+        button#submitBtn { 
+            padding: 18px; background-color: var(--amarillo); color: #000; 
+            font-weight: 700; border: none; border-radius: 10px; 
+            cursor: pointer; font-size: 1.1rem; text-transform: uppercase; margin-top: 10px;
+        }
+
+        /* FEED DE PEDIDOS */
+        .feed-section { width: 95%; max-width: 480px; margin-bottom: 60px; }
+        .feed-title { text-align: center; color: var(--amarillo); font-size: 1rem; letter-spacing: 2px; margin-bottom: 25px; text-transform: uppercase; }
+
+        .card-pedido { 
+            background: var(--negro-card); border: 1px solid #222; 
+            padding: 25px; border-radius: 16px; margin-bottom: 20px; 
+            transition: 0.3s;
+        }
+        
+        .card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px; }
+        .prod-name { font-size: 1.4rem; font-weight: 700; color: var(--blanco); text-transform: uppercase; }
+        .badge-verificado { font-size: 0.65rem; color: #28a745; border: 1px solid #28a745; padding: 2px 6px; border-radius: 4px; }
+        
+        .prod-info { font-size: 0.9rem; color: var(--gris-texto); margin-bottom: 20px; line-height: 1.5; }
+
+        .btn-adquirir { 
+            width: 100%; background: transparent; color: var(--amarillo); 
+            border: 2px solid var(--amarillo); padding: 14px; border-radius: 10px; 
+            font-weight: 700; cursor: pointer; text-transform: uppercase; font-size: 0.9rem;
+        }
+        .btn-adquirir:hover { background: var(--amarillo); color: #000; }
+        .tasa-txt { display: block; font-size: 0.65rem; margin-top: 4px; opacity: 0.7; }
+
+        /* LEGAL */
+        footer { padding: 40px; text-align: center; border-top: 1px solid #222; width: 100%; }
+        .legal-trigger { color: var(--gris-texto); font-size: 0.8rem; cursor: pointer; text-decoration: underline; }
+
         #modalLegal {
-            display: none;
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.9); z-index: 1000;
-            justify-content: center; align-items: center;
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.95); z-index: 1000; justify-content: center; align-items: center;
         }
-        .modal-content {
-            background: #1a1a1a; padding: 30px; border-radius: 15px;
-            max-width: 500px; width: 90%; max-height: 80vh; overflow-y: auto;
-            border: 1px solid var(--amarillo);
+        .modal-body {
+            background: #111; padding: 35px; border-radius: 16px; border: 1px solid var(--amarillo);
+            max-width: 450px; width: 90%; max-height: 70vh; overflow-y: auto;
         }
-        .modal-content h2 { color: var(--amarillo); font-size: 1.2rem; }
-        .modal-content p { font-size: 0.85rem; line-height: 1.5; color: #ccc; }
-        .close-btn { background: var(--amarillo); color: #000; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; margin-top: 20px; }
+        .modal-body h2 { color: var(--amarillo); margin-top: 0; }
+        .modal-body p { font-size: 0.9rem; color: #ccc; line-height: 1.6; }
+        .close-modal { width: 100%; padding: 12px; background: var(--amarillo); border: none; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 20px; }
     </style>
 </head>
 <body>
 
     <header>
-        <div class="brand">WANTED</div>
-        <div class="secure-badge">🛡️ Conexión Encriptada</div>
+        <div class="brand-name">WANTED</div>
+        <div class="logo-w">W</div>
     </header>
 
-    <div class="hero-section">
+    <div class="main-container">
+        <div class="descripcion-top">Publica tu requerimiento de forma segura. Los mejores vendedores competirán por tu pedido.</div>
         <form id="orderForm">
-            <div class="input-box"><label>Tu Nombre</label><input type="text" id="nombre" required></div>
-            <div class="input-box"><label>Producto</label><input type="text" id="producto" required></div>
-            <div class="input-box"><label>Cantidad</label><input type="number" id="cantidad" required></div>
-            <button type="submit" id="submitBtn">Publicar Requerimiento</button>
+            <div class="input-group">
+                <label>Nombre o Alias</label>
+                <input type="text" id="nombre" placeholder="Ej: Carlos_Pro" required>
+            </div>
+            <div class="input-group">
+                <label>Producto / Repuesto Buscado</label>
+                <input type="text" id="producto" placeholder="Marca, modelo o referencia" required>
+            </div>
+            <div class="input-group">
+                <label>Cantidad</label>
+                <input type="number" id="cantidad" placeholder="1" required>
+            </div>
+            <button type="submit" id="submitBtn">Publicar Pedido</button>
         </form>
     </div>
 
-    <div class="feed-container" id="listaPedidos"></div>
+    <div class="feed-section">
+        <h3 class="feed-title">Pedidos Activos en el Mercado</h3>
+        <div id="contenedorPedidos">
+            </div>
+    </div>
 
     <footer>
-        <span class="legal-link" onclick="toggleModal()">Términos, Condiciones y Privacidad</span>
-        <p style="font-size: 0.7rem; color: #444; margin-top: 10px;">WANTED MARKETPLACE © 2026</p>
+        <span class="legal-trigger" onclick="toggleModal()">Términos, Condiciones y Privacidad</span>
+        <p style="font-size: 0.7rem; color: #444; margin-top: 15px;">WANTED MARKETPLACE © 2026</p>
     </footer>
 
     <div id="modalLegal">
-        <div class="modal-content">
-            <h2>Términos y Condiciones</h2>
-            <p><strong>1. Naturaleza del Servicio:</strong> WANTED es una plataforma de intermediación que conecta compradores con potenciales vendedores. No somos propietarios, vendedores ni fabricantes de los productos publicados.</p>
-            <p><strong>2. Tasa de Conexión:</strong> El pago de USD $3,73 otorga al vendedor el acceso exclusivo a los datos de contacto del comprador para un pedido específico. Este pago no garantiza el cierre de la venta.</p>
-            <p><strong>3. Exclusión de Responsabilidad:</strong> WANTED no se hace responsable por la veracidad de los pedidos, la calidad de los productos ofrecidos por terceros, ni por incumplimientos en los pagos o entregas entre las partes.</p>
-            <p><strong>4. Política de No Reembolso:</strong> Debido a que el servicio se considera prestado al momento de liberar la información de contacto, no se realizarán reembolsos bajo ninguna circunstancia ajena a fallos técnicos del sistema.</p>
-            <button class="close-btn" onclick="toggleModal()">ENTENDIDO</button>
+        <div class="modal-body">
+            <h2>Marco Legal</h2>
+            <p><strong>1. Intermediación:</strong> WANTED conecta partes. No garantizamos el estado de los productos ni el cumplimiento del pago final.</p>
+            <p><strong>2. Tasa de Acceso:</strong> El pago de USD $3,73 libera los datos del comprador. No es reembolsable si el trato no se cierra.</p>
+            <p><strong>3. Privacidad:</strong> Los datos se usan exclusivamente para la conexión comercial entre las partes interesadas.</p>
+            <button class="close-modal" onclick="toggleModal()">ACEPTAR</button>
         </div>
     </div>
 
     <script>
         const SUPABASE_URL = 'https://gtngqwnbyjqqmuzsztnv.supabase.co';
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd0bmdxd25ieWpxcW11enN6dG52Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMzNjgyMzksImV4cCI6MjA4ODk0NDIzOX0.vSxxHrayzEJG_HwRXcyOCb5vZuDZksrQe6GnAwhYD1w';
+        
         const { createClient } = supabase;
         const _supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
@@ -121,34 +170,52 @@
         async function cargarPedidos() {
             const { data, error } = await _supabase.from('pedidos').select('*').order('id', { ascending: false });
             if (error) return;
-            const lista = document.getElementById('listaPedidos');
-            lista.innerHTML = '';
+            
+            const contenedor = document.getElementById('contenedorPedidos');
+            contenedor.innerHTML = '';
+
             data.forEach(p => {
-                const div = document.createElement('div');
-                div.className = 'card';
-                div.innerHTML = `
-                    <div class="product-name">${p.producto}</div>
-                    <p style="font-size:0.8rem; color:#888;">Cantidad: ${p.cantidad} | De: ${p.nombre}</p>
-                    <button class="btn-offer" onclick="alert('Redirigiendo a pasarela de pago segura...')">ADQUIRIR CONTACTO (USD $3,73)</button>
+                const card = document.createElement('div');
+                card.className = 'card-pedido';
+                card.innerHTML = `
+                    <div class="card-header">
+                        <span class="prod-name">${p.producto}</span>
+                        <span class="badge-verificado">✓ VERIFICADO</span>
+                    </div>
+                    <div class="prod-info">
+                        Cantidad: <b>${p.cantidad}</b><br>
+                        Solicitante: ${p.nombre}
+                    </div>
+                    <button class="btn-adquirir" onclick="alert('Redirigiendo a dLocal Go para procesar USD $3,73...')">
+                        ADQUIRIR CONTACTO
+                        <span class="tasa-txt">TASA DE ACCESO: USD $3,73</span>
+                    </button>
                 `;
-                lista.appendChild(div);
+                contenedor.appendChild(card);
             });
         }
 
         document.getElementById('orderForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            const btn = document.getElementById('submitBtn'); btn.innerText = 'PROCESANDO...';
-            await _supabase.from('pedidos').insert([{ 
+            const btn = document.getElementById('submitBtn');
+            btn.innerText = 'PROCESANDO...';
+            btn.disabled = true;
+
+            const { error } = await _supabase.from('pedidos').insert([{ 
                 nombre: document.getElementById('nombre').value, 
                 producto: document.getElementById('producto').value, 
                 cantidad: parseInt(document.getElementById('cantidad').value) 
             }]);
-            document.getElementById('orderForm').reset();
-            cargarPedidos();
-            btn.innerText = 'Publicar Requerimiento';
+
+            if (!error) { 
+                document.getElementById('orderForm').reset(); 
+                cargarPedidos(); 
+            }
+            btn.innerText = 'Publicar Pedido';
+            btn.disabled = false;
         });
 
         cargarPedidos();
     </script>
 </body>
-    </html>
+        </html>
