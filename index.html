@@ -3,68 +3,88 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WANTED - Pedidos</title>
+    <title>WANTED - Marketplace</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         body { 
             background-color: #000; 
             color: #FFD700; 
             font-family: 'Courier New', Courier, monospace; 
-            display: flex; 
-            flex-direction: column;
-            align-items: center; 
-            padding: 20px;
             margin: 0;
-            text-align: center;
+            display: flex;
+            min-height: 100vh;
         }
 
-        .wanted {
-            font-size: 5.5rem;
+        /* WANTED al costado en cursiva */
+        .sidebar {
+            width: 80px;
+            background-color: #FFD700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-right: 2px solid #FFD700;
+        }
+
+        .wanted-text {
+            transform: rotate(-90deg);
+            color: #000;
+            font-size: 4.5rem;
             font-weight: 900;
-            letter-spacing: 12px;
-            margin-top: 20px;
-            line-height: 1;
+            font-style: italic;
+            white-space: nowrap;
+            letter-spacing: 15px;
         }
 
-        .section-vendedores {
-            margin: 20px 0;
-            font-size: 1.2rem;
-            border-top: 2px solid #FFD700;
-            border-bottom: 2px solid #FFD700;
-            padding: 10px 0;
-            width: 100%;
-            max-width: 400px;
-            font-weight: bold;
+        .main-content {
+            flex: 1;
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
-        .oferta {
-            font-size: 3.5rem; /* Un poco más grande para que destaque */
+        .descripcion-pagina {
+            border: 2px solid #FFD700;
+            padding: 15px;
+            margin-bottom: 25px;
+            max-width: 450px;
+            font-size: 0.85rem;
+            line-height: 1.3;
+            text-align: center;
+            text-transform: uppercase;
+            background: rgba(20, 20, 20, 0.5);
+        }
+
+        .precio-tag {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
             font-weight: bold;
-            margin: 20px 0;
+            color: #FFD700;
         }
 
         form { 
-            width: 90%;
-            max-width: 350px;
+            width: 100%;
+            max-width: 380px;
             display: flex;
             flex-direction: column;
-            gap: 15px;
-            margin-top: 10px;
+            gap: 12px;
         }
 
-        input { 
+        input, textarea { 
             padding: 12px; 
             background: #000; 
             border: 2px solid #FFD700; 
             color: #FFD700;
             font-family: 'Courier New', monospace;
-            font-weight: bold;
-            text-transform: uppercase;
             font-size: 1rem;
+            text-transform: uppercase;
+            outline: none;
         }
 
+        textarea { resize: none; }
+
         button { 
-            padding: 15px; 
+            padding: 18px; 
             background-color: #FFD700; 
             color: #000; 
             font-weight: 900; 
@@ -72,31 +92,38 @@
             cursor: pointer;
             font-size: 1.2rem;
             text-transform: uppercase;
+            transition: 0.3s;
         }
 
-        button:hover {
-            background-color: #fff;
+        button:hover { 
+            background-color: #fff; 
         }
+
+        ::placeholder { color: rgba(255, 215, 0, 0.4); }
     </style>
 </head>
 <body>
 
-    <div class="wanted">WANTED</div>
-
-    <div class="section-vendedores">
-        SECCIÓN DE VENDEDORES
+    <div class="sidebar">
+        <div class="wanted-text">WANTED</div>
     </div>
 
-    <div class="oferta">
-        USD 3,73
-    </div>
+    <div class="main-content">
+        <div class="descripcion-pagina">
+            <strong>SISTEMA DE SUBASTA REVERSA</strong><br>
+            EL COMPRADOR PUBLICA SU NECESIDAD Y LOS VENDEDORES COMPITEN CON SUS MEJORES OFERTAS.
+        </div>
 
-    <form id="orderForm">
-        <input type="text" id="nombre" placeholder="TU NOMBRE" required>
-        <input type="text" id="producto" placeholder="PRODUCTO" required>
-        <input type="number" id="cantidad" placeholder="CANTIDAD" required>
-        <button type="submit" id="submitBtn">ENVIAR PEDIDO</button>
-    </form>
+        <div class="precio-tag">$ 3,73</div>
+
+        <form id="orderForm">
+            <input type="text" id="nombre" placeholder="TU NOMBRE / ALIAS" required>
+            <input type="text" id="producto" placeholder="PRODUCTO BUSCADO" required>
+            <textarea id="descripcion" placeholder="DETALLES DEL PEDIDO (MODELO, ESTADO, ETC.)" rows="3" required></textarea>
+            <input type="number" id="cantidad" placeholder="CANTIDAD" required>
+            <button type="submit" id="submitBtn">PUBLICAR MI PEDIDO</button>
+        </form>
+    </div>
 
     <script>
         const SUPABASE_URL = 'https://gtngqwnbyjqqmuzsztnv.supabase.co';
@@ -109,26 +136,27 @@
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
             const btn = document.getElementById('submitBtn');
-            btn.innerText = 'ENVIANDO...';
+            btn.innerText = 'PROCESANDO...';
             btn.disabled = true;
 
             const nombre = document.getElementById('nombre').value;
             const producto = document.getElementById('producto').value;
+            const descripcion = document.getElementById('descripcion').value;
             const cantidad = parseInt(document.getElementById('cantidad').value);
 
             const { error } = await _supabase
                 .from('pedidos')
-                .insert([{ nombre, producto, cantidad }]);
+                .insert([{ nombre, producto, cantidad, descripcion }]);
 
             if (error) {
                 alert('ERROR: ' + error.message);
             } else {
-                alert('¡PEDIDO ENVIADO CON ÉXITO!');
+                alert('¡PEDIDO PUBLICADO EXITOSAMENTE!');
                 form.reset();
             }
-            btn.innerText = 'ENVIAR PEDIDO';
+            btn.innerText = 'PUBLICAR MI PEDIDO';
             btn.disabled = false;
         });
     </script>
 </body>
-    </html>
+            </html>
