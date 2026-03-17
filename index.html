@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wanted - Pedidos</title>
+    <title>WANTED - Ofertas</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         body { 
@@ -12,95 +12,101 @@
             font-family: 'Courier New', Courier, monospace; 
             display: flex; 
             flex-direction: column;
-            justify-content: center; 
             align-items: center; 
-            min-height: 100vh; 
+            padding: 20px;
             margin: 0;
             text-transform: uppercase;
         }
 
-        .header-wanted {
-            font-size: 3rem;
+        /* El estilo de WANTED original */
+        .wanted-title {
+            font-size: 5rem;
             font-weight: 900;
-            letter-spacing: 10px;
-            margin-bottom: 5px;
-            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+            letter-spacing: 15px;
+            margin: 20px 0;
+            line-height: 1;
         }
 
-        .sub-header {
-            font-size: 0.9rem;
+        /* Sección de Ofertas */
+        .ofertas-container {
+            width: 100%;
+            max-width: 400px;
             margin-bottom: 30px;
-            letter-spacing: 3px;
-            border-bottom: 2px solid #FFD700;
-            padding-bottom: 5px;
         }
 
+        .oferta-item {
+            border: 2px solid #FFD700;
+            padding: 15px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(20, 20, 20, 0.8);
+        }
+
+        .precio {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #fff;
+            background: #FFD700;
+            color: #000;
+            padding: 2px 8px;
+        }
+
+        /* Formulario Simple */
         form { 
-            border: 3px solid #FFD700; 
-            padding: 25px; 
-            width: 85%;
-            max-width: 320px;
-            background: rgba(20, 20, 20, 0.9);
-            box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);
-        }
-
-        .campo {
-            margin-bottom: 15px;
-        }
-
-        label {
-            display: block;
-            font-size: 0.7rem;
-            margin-bottom: 5px;
+            width: 100%;
+            max-width: 400px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
         }
 
         input { 
-            width: 100%; 
-            padding: 10px; 
-            box-sizing: border-box;
+            padding: 12px; 
             background: #111; 
             border: 1px solid #FFD700; 
             color: #FFD700;
             font-family: 'Courier New', monospace;
-            font-size: 1rem;
         }
 
         button { 
-            width: 100%; 
             padding: 15px; 
             background-color: #FFD700; 
             color: #000; 
             font-weight: bold; 
             border: none; 
             cursor: pointer;
-            margin-top: 10px;
             font-size: 1rem;
         }
 
-        button:hover {
-            background-color: #fff;
-        }
+        button:hover { background-color: #fff; }
     </style>
 </head>
 <body>
 
-    <div class="header-wanted">WANTED</div>
-    <div class="sub-header">Dead or Alive - Pedidos</div>
+    <div class="wanted-title">WANTED</div>
+
+    <div class="ofertas-container">
+        <div class="oferta-item">
+            <span>Bici Rodado 29</span>
+            <span class="precio">$ 150.000</span>
+        </div>
+        <div class="oferta-item">
+            <span>Casco Pro</span>
+            <span class="precio">$ 25.000</span>
+        </div>
+        <div class="oferta-item">
+            <span>Luces LED</span>
+            <span class="precio">$ 8.500</span>
+        </div>
+    </div>
 
     <form id="orderForm">
-        <div class="campo">
-            <label>Nombre del forajido:</label>
-            <input type="text" id="nombre" placeholder="Nombre..." required>
-        </div>
-        <div class="campo">
-            <label>Botín (Producto):</label>
-            <input type="text" id="producto" placeholder="¿Qué buscas?" required>
-        </div>
-        <div class="campo">
-            <label>Recompensa (Cantidad):</label>
-            <input type="number" id="cantidad" placeholder="Cantidad..." required>
-        </div>
-        <button type="submit" id="submitBtn">REGISTRAR PEDIDO</button>
+        <input type="text" id="nombre" placeholder="TU NOMBRE" required>
+        <input type="text" id="producto" placeholder="PRODUCTO QUE DESEAS" required>
+        <input type="number" id="cantidad" placeholder="CANTIDAD" required>
+        <button type="submit" id="submitBtn">ENVIAR PEDIDO</button>
     </form>
 
     <script>
@@ -114,8 +120,7 @@
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
             const btn = document.getElementById('submitBtn');
-            btn.innerText = 'PROCESANDO...';
-            btn.disabled = true;
+            btn.innerText = 'ENVIANDO...';
 
             const nombre = document.getElementById('nombre').value;
             const producto = document.getElementById('producto').value;
@@ -128,12 +133,11 @@
             if (error) {
                 alert('Error: ' + error.message);
             } else {
-                alert('¡PEDIDO REGISTRADO EN EL SISTEMA!');
+                alert('¡PEDIDO RECIBIDO!');
                 form.reset();
             }
-            btn.innerText = 'REGISTRAR PEDIDO';
-            btn.disabled = false;
+            btn.innerText = 'ENVIAR PEDIDO';
         });
     </script>
 </body>
-                </html>
+    </html>
