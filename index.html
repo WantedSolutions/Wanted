@@ -4,64 +4,128 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mis Pedidos</title>
+    <title>Panel de Pedidos</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        /* Aquí vuelve tu diseño */
+        :root {
+            --amarillo: #FFD700;
+            --negro: #0b0b0b;
+            --gris: #1a1a1a;
+        }
+
         body { 
-            background-color: #000000; 
-            color: #FFD700; 
-            font-family: 'Courier New', Courier, monospace; 
+            background-color: var(--negro); 
+            color: var(--amarillo); 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
             display: flex; 
             justify-content: center; 
             align-items: center; 
-            height: 100vh; 
+            min-height: 100vh; 
             margin: 0;
         }
-        form { 
-            border: 2px solid #FFD700; 
-            padding: 30px; 
-            border-radius: 15px; 
-            width: 300px;
+
+        .contenedor {
+            background: var(--gris);
+            padding: 40px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5), 0 0 15px rgba(255, 215, 0, 0.1);
+            width: 90%;
+            max-width: 350px;
             text-align: center;
         }
-        h2 { margin-bottom: 20px; text-transform: uppercase; }
-        input { 
-            width: 90%; 
-            padding: 10px; 
-            margin-bottom: 15px; 
-            background: #222; 
-            border: 1px solid #FFD700; 
-            color: white;
+
+        h2 { 
+            margin-top: 0;
+            font-size: 1.5rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            border-bottom: 2px solid var(--amarillo);
+            padding-bottom: 10px;
+            display: inline-block;
         }
-        button { 
+
+        .input-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            font-size: 0.8rem;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        input { 
             width: 100%; 
             padding: 12px; 
-            background-color: #FFD700; 
+            box-sizing: border-box;
+            background: #252525; 
+            border: 1px solid #444; 
+            border-radius: 8px;
+            color: white;
+            font-size: 1rem;
+            outline: none;
+            transition: border 0.3s;
+        }
+
+        input:focus {
+            border-color: var(--amarillo);
+        }
+
+        button { 
+            width: 100%; 
+            padding: 15px; 
+            background-color: var(--amarillo); 
             color: black; 
             font-weight: bold; 
             border: none; 
+            border-radius: 8px;
             cursor: pointer;
             text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: transform 0.1s, background-color 0.3s;
         }
-        button:hover { background-color: #fff; }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        button:hover {
+            background-color: #ffed4a;
+        }
     </style>
 </head>
 <body>
 
-    <form id="orderForm">
-        <h2>Nuevo Pedido</h2>
-        <input type="text" id="nombre" placeholder="TU NOMBRE" required>
-        <input type="text" id="producto" placeholder="PRODUCTO" required>
-        <input type="number" id="cantidad" placeholder="CANTIDAD" required>
-        <button type="submit" id="submitBtn">ENVIAR AHORA</button>
-    </form>
+    <div class="contenedor">
+        <form id="orderForm">
+            <h2>Nuevo Pedido</h2>
+            
+            <div class="input-group">
+                <label>NOMBRE DEL CLIENTE</label>
+                <input type="text" id="nombre" placeholder="Ej: Juan Pérez" required>
+            </div>
+
+            <div class="input-group">
+                <label>PRODUCTO</label>
+                <input type="text" id="producto" placeholder="¿Qué llevas?" required>
+            </div>
+
+            <div class="input-group">
+                <label>CANTIDAD</label>
+                <input type="number" id="cantidad" placeholder="0" required>
+            </div>
+
+            <button type="submit" id="submitBtn">CONFIRMAR PEDIDO</button>
+        </form>
+    </div>
 
     <script>
         const SUPABASE_URL = 'https://gtngqwnbyjqqmuzsztnv.supabase.co';
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd0bmdxd25ieWpxcW11enN6dG52Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMzNjgyMzksImV4cCI6MjA4ODk0NDIzOX0.vSxxHrayzEJG_HwRXcyOCb5vZuDZksrQe6GnAwhYD1w';
         
-        // Inicialización correcta
         const { createClient } = supabase;
         const _supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
@@ -69,7 +133,9 @@
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
             const btn = document.getElementById('submitBtn');
+            const originalText = btn.innerText;
             btn.innerText = 'PROCESANDO...';
+            btn.disabled = true;
 
             const nombre = document.getElementById('nombre').value;
             const producto = document.getElementById('producto').value;
@@ -80,13 +146,13 @@
                 .insert([{ nombre, producto, cantidad }]);
 
             if (error) {
-                alert('Error al enviar: ' + error.message);
-                console.error(error);
+                alert('Error: ' + error.message);
             } else {
                 alert('¡PEDIDO RECIBIDO CON ÉXITO!');
                 form.reset();
             }
-            btn.innerText = 'ENVIAR AHORA';
+            btn.innerText = originalText;
+            btn.disabled = false;
         });
     </script>
 </body>
