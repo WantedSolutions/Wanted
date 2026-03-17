@@ -17,7 +17,7 @@
         body { 
             background-color: var(--negro-puro); 
             color: var(--blanco); 
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-family: 'Inter', -apple-system, sans-serif;
             margin: 0;
             display: flex;
             flex-direction: column;
@@ -25,7 +25,7 @@
             min-height: 100vh;
         }
 
-        /* Header Profesional */
+        /* HEADER PROFESIONAL */
         header {
             width: 100%;
             padding: 20px 40px;
@@ -34,188 +34,114 @@
             align-items: center;
             box-sizing: border-box;
             border-bottom: 1px solid #222;
+            background: rgba(10, 10, 10, 0.9);
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
 
-        .brand {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
+        .brand-name { font-size: 1.8rem; font-weight: 800; color: var(--amarillo); text-transform: uppercase; letter-spacing: -1px; }
+        .logo-w { background-color: var(--amarillo); color: #000; font-weight: 900; font-size: 1.5rem; width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; border-radius: 8px; font-style: italic; }
 
-        .brand-name {
-            font-size: 1.8rem;
-            font-weight: 800;
-            letter-spacing: -1px;
-            color: var(--amarillo);
-            text-transform: uppercase;
-        }
+        /* CONTENEDOR PRINCIPAL */
+        .main-container { width: 95%; max-width: 500px; margin: 30px 0; background: var(--negro-card); padding: 30px; border-radius: 16px; border: 1px solid #222; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
 
-        .logo-w {
-            background-color: var(--amarillo);
-            color: #000;
-            font-weight: 900;
-            font-size: 1.5rem;
-            width: 45px;
-            height: 45px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 8px;
-            font-style: italic;
-        }
+        .descripcion-top { font-size: 0.9rem; color: var(--gris-texto); text-align: center; margin-bottom: 25px; text-transform: uppercase; letter-spacing: 1px; }
 
-        .main-container {
-            width: 95%;
-            max-width: 480px;
-            margin: 40px 0;
-            background: var(--negro-card);
-            padding: 40px;
-            border-radius: 16px;
-            border: 1px solid #222;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
-        }
-
-        .descripcion {
-            font-size: 1rem;
-            color: var(--gris-texto);
-            margin-bottom: 30px;
-            line-height: 1.6;
-            text-align: center;
-        }
-
-        .precio-wrapper {
-            text-align: center;
-            margin-bottom: 40px;
-        }
-
-        .precio-label {
-            display: block;
-            font-size: 0.8rem;
-            color: var(--amarillo);
-            letter-spacing: 2px;
-            margin-bottom: 5px;
-        }
-
-        .precio-us {
-            font-size: 3.5rem;
-            font-weight: 700;
-            color: var(--blanco);
-        }
-
-        .precio-us span {
-            font-size: 1.5rem;
-            color: var(--gris-texto);
-            margin-right: 10px;
-        }
-
-        form {
-            display: flex;
-            flex-direction: column;
-            gap: 25px;
-        }
-
-        .input-group {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        label {
-            font-size: 0.85rem;
-            font-weight: 600;
-            color: var(--blanco);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
+        form { display: flex; flex-direction: column; gap: 15px; }
+        .input-group { display: flex; flex-direction: column; gap: 5px; }
+        label { font-size: 0.75rem; font-weight: 700; color: var(--amarillo); }
+        
         input { 
-            padding: 16px; 
-            background-color: #000;
-            border: 1px solid #333;
-            border-radius: 10px;
-            color: white;
+            padding: 14px; 
+            background-color: #000; 
+            border: 1px solid #333; 
+            border-radius: 10px; 
+            color: white; 
             font-size: 1rem;
-            transition: all 0.3s ease;
-        }
-
-        input:focus {
-            border-color: var(--amarillo);
             outline: none;
-            box-shadow: 0 0 0 2px rgba(255, 215, 0, 0.1);
         }
+        input:focus { border-color: var(--amarillo); }
 
-        button { 
-            padding: 18px; 
+        button#submitBtn { 
+            padding: 16px; 
             background-color: var(--amarillo); 
             color: #000; 
-            font-weight: 700; 
+            font-weight: 800; 
             border: none; 
-            border-radius: 10px;
+            border-radius: 10px; 
+            cursor: pointer; 
+            text-transform: uppercase; 
+            font-size: 1rem;
+            margin-top: 10px;
+        }
+
+        /* SECCIÓN DE PEDIDOS */
+        .seccion-pedidos { width: 95%; max-width: 500px; margin-bottom: 50px; }
+        .titulo-pedidos { text-align: center; color: var(--blanco); font-size: 1.2rem; margin-bottom: 20px; border-bottom: 2px solid var(--amarillo); padding-bottom: 10px; }
+
+        .pedido-card { 
+            background: #1a1a1a; 
+            border: 1px solid #333; 
+            padding: 20px; 
+            border-radius: 12px; 
+            margin-bottom: 15px; 
+            transition: 0.3s;
+        }
+        
+        .pedido-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+        .pedido-producto { font-size: 1.3rem; font-weight: 800; color: var(--amarillo); text-transform: uppercase; }
+        .pedido-cantidad { background: var(--amarillo); color: #000; padding: 2px 8px; border-radius: 4px; font-weight: bold; font-size: 0.8rem; }
+        
+        .pedido-user { font-size: 0.85rem; color: var(--gris-texto); margin-bottom: 15px; }
+
+        .btn-ofertar { 
+            width: 100%;
+            background-color: transparent; 
+            color: var(--amarillo); 
+            border: 2px solid var(--amarillo); 
+            padding: 12px; 
+            border-radius: 8px; 
+            font-weight: 800; 
             cursor: pointer;
-            font-size: 1.1rem;
             text-transform: uppercase;
-            transition: transform 0.2s, background-color 0.3s;
+            transition: 0.3s;
         }
-
-        button:hover {
-            background-color: #e6c200;
-            transform: translateY(-2px);
-        }
-
-        button:active {
-            transform: translateY(0);
-        }
-
-        .footer-tag {
-            margin-top: 30px;
-            font-size: 0.7rem;
-            color: #444;
-            text-align: center;
-            letter-spacing: 1px;
-        }
+        .btn-ofertar:hover { background-color: var(--amarillo); color: #000; }
+        
+        .tasa-info { display: block; font-size: 0.65rem; margin-top: 4px; opacity: 0.8; }
     </style>
 </head>
 <body>
 
     <header>
-        <div class="brand">
-            <span class="brand-name">WANTED</span>
-        </div>
+        <div class="brand-name">WANTED</div>
         <div class="logo-w">W</div>
     </header>
 
     <div class="main-container">
-        <div class="descripcion">
-            Publica tu pedido ahora. Nuestra red de vendedores competirá por ofrecerte el mejor precio del mercado.
-        </div>
-
-        <div class="precio-wrapper">
-            <span class="precio-label">OFERTA DESTACADA</span>
-            <div class="precio-us">
-                <span>USD $</span>3,73
-            </div>
-        </div>
-
+        <div class="descripcion-top">Publica tu pedido y recibe ofertas</div>
         <form id="orderForm">
             <div class="input-group">
-                <label>Nombre o Usuario</label>
-                <input type="text" id="nombre" placeholder="Ej: @comprador22" required>
+                <label>NOMBRE O USUARIO</label>
+                <input type="text" id="nombre" placeholder="Ej: Carlos88" required>
             </div>
-            
             <div class="input-group">
-                <label>¿Qué buscas comprar?</label>
-                <input type="text" id="producto" placeholder="Nombre del producto o repuesto" required>
+                <label>PRODUCTO BUSCADO</label>
+                <input type="text" id="producto" placeholder="¿Qué necesitas?" required>
             </div>
-
             <div class="input-group">
-                <label>Cantidad requerida</label>
+                <label>CANTIDAD</label>
                 <input type="number" id="cantidad" placeholder="1" required>
             </div>
-
             <button type="submit" id="submitBtn">Publicar Pedido</button>
         </form>
+    </div>
 
-        <div class="footer-tag">WANTED MARKETPLACE © 2026</div>
+    <div class="seccion-pedidos">
+        <h3 class="titulo-pedidos">PEDIDOS ACTIVOS EN EL MERCADO</h3>
+        <div id="contenedorPedidos">
+            </div>
     </div>
 
     <script>
@@ -224,6 +150,38 @@
         
         const { createClient } = supabase;
         const _supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        async function cargarPedidos() {
+            const { data, error } = await _supabase
+                .from('pedidos')
+                .select('*')
+                .order('id', { ascending: false });
+
+            if (error) {
+                console.error('Error al cargar:', error);
+                return;
+            }
+            
+            const contenedor = document.getElementById('contenedorPedidos');
+            contenedor.innerHTML = '';
+
+            data.forEach(pedido => {
+                const card = document.createElement('div');
+                card.className = 'pedido-card';
+                card.innerHTML = `
+                    <div class="pedido-header">
+                        <span class="pedido-producto">${pedido.producto}</span>
+                        <span class="pedido-cantidad">CANT: ${pedido.cantidad}</span>
+                    </div>
+                    <div class="pedido-user">Solicitado por: ${pedido.nombre}</div>
+                    <button class="btn-ofertar" onclick="alert('Esta acción redirigirá al pago de USD $3.73 para liberar los datos del comprador.')">
+                        OFERTAR AHORA
+                        <span class="tasa-info">TASA DE ACCESO: USD $3.73</span>
+                    </button>
+                `;
+                contenedor.appendChild(card);
+            });
+        }
 
         const form = document.getElementById('orderForm');
         form.addEventListener('submit', async (e) => {
@@ -236,19 +194,20 @@
             const producto = document.getElementById('producto').value;
             const cantidad = parseInt(document.getElementById('cantidad').value);
 
-            const { error } = await _supabase
-                .from('pedidos')
-                .insert([{ nombre, producto, cantidad }]);
+            const { error } = await _supabase.from('pedidos').insert([{ nombre, producto, cantidad }]);
 
             if (error) {
-                alert('Error: ' + error.message);
+                alert('Error al publicar: ' + error.message);
             } else {
-                alert('¡PEDIDO PUBLICADO! Los vendedores han sido notificados.');
                 form.reset();
+                cargarPedidos();
             }
             btn.innerText = 'Publicar Pedido';
             btn.disabled = false;
         });
+
+        // Cargar pedidos al entrar a la web
+        cargarPedidos();
     </script>
 </body>
-    </html>        
+                                          </html>        
