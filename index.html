@@ -22,7 +22,7 @@
             margin: 0; display: flex; flex-direction: column; align-items: center; min-height: 100vh;
         }
 
-        /* HEADER */
+        /* HEADER PREMIUM */
         header {
             width: 100%; padding: 20px 40px; display: flex; justify-content: space-between;
             align-items: center; border-bottom: 1px solid #222; background: rgba(0,0,0,0.9);
@@ -31,7 +31,7 @@
         .brand { font-size: 1.8rem; font-weight: 900; color: var(--amarillo); letter-spacing: -1.5px; }
         .logo-w { background: var(--amarillo); color: #000; font-weight: 900; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border-radius: 6px; font-style: italic; }
 
-        /* AUTH BOX */
+        /* AUTH BOX (REGISTRO Y LOGIN) */
         .auth-box { 
             width: 90%; max-width: 400px; margin-top: 60px; background: var(--negro-card); 
             padding: 40px; border-radius: 20px; border: 1px solid #333; text-align: center;
@@ -53,7 +53,7 @@
             text-transform: uppercase; letter-spacing: 1px;
         }
 
-        /* PANEL POST-LOGIN */
+        /* PANEL PRINCIPAL (VISIBLE SOLO TRAS LOGUEARSE) */
         #mainPanel { display: none; width: 95%; max-width: 500px; flex-direction: column; }
 
         .form-hero { 
@@ -63,7 +63,7 @@
         .form-hero h2 { font-size: 1.1rem; margin-bottom: 15px; color: #fff; line-height: 1.4; }
         .form-hero span { color: var(--amarillo); font-weight: 800; }
 
-        /* LISTA DE PEDIDOS */
+        /* CARTAS DE PEDIDOS */
         .card-pedido { 
             background: var(--negro-card); border: 1px solid #222; padding: 25px; 
             border-radius: 18px; margin-bottom: 20px; position: relative;
@@ -142,7 +142,7 @@
             location.reload();
         }
 
-        // CONTROL DE SESIÓN
+        // CONTROL DE ACCESO
         document.getElementById('authForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const email = document.getElementById('email').value;
@@ -161,8 +161,11 @@
                 alert('ERROR: ' + res.error.message);
                 btn.innerText = modeLogin ? 'ENTRAR' : 'REGISTRARME';
             } else {
-                if (!modeLogin) alert('Revisa tu email para confirmar tu cuenta y poder entrar.');
-                else initPanel();
+                if (!modeLogin) {
+                    alert('REGISTRO EXITOSO: Revisa tu email para confirmar tu cuenta y poder entrar.');
+                } else {
+                    initPanel();
+                }
             }
         });
 
@@ -189,7 +192,7 @@
                     </div>
                     <div class="stars">★★★★★</div>
                     <div class="user-tag">Usuario: ${p.nombre.split('@')[0]}... | Cantidad: ${p.cantidad}</div>
-                    <button class="btn-pay" onclick="alert('Redirigiendo a dLocal Go para liberar contacto (USD $3,73)...')">
+                    <button class="btn-pay" onclick="alert('Redirigiendo a pasarela de pago para liberar contacto (USD $3,73)...')">
                         ADQUIRIR CONTACTO
                         <span style="display:block; font-size:0.6rem; opacity:0.8;">TASA SEGURA: USD $3,73</span>
                     </button>
@@ -198,20 +201,31 @@
             });
         }
 
+        // PUBLICAR PEDIDO
         document.getElementById('orderForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const { data: { user } } = await _supabase.auth.getUser();
-            await _supabase.from('pedidos').insert([{ 
+            
+            if (!user) {
+                alert("Debes estar logueado para publicar.");
+                return;
+            }
+
+            const { error } = await _supabase.from('pedidos').insert([{ 
                 nombre: user.email, 
                 producto: document.getElementById('prod').value, 
                 cantidad: parseInt(document.getElementById('cant').value) 
             }]);
-            document.getElementById('orderForm').reset();
-            renderPedidos();
+
+            if (error) {
+                alert("Error al publicar: " + error.message);
+            } else {
+                document.getElementById('orderForm').reset();
+                renderPedidos();
+            }
         });
 
         initPanel();
     </script>
 </body>
-    </html>
-        
+            </html>
