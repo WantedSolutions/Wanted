@@ -3,219 +3,215 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WANTED | Marketplace</title>
+    <title>WANTED | Elite Marketplace</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         :root {
             --amarillo: #FFD700;
             --negro-puro: #0a0a0a;
-            --negro-card: #161616;
-            --gris-texto: #a0a0a0;
+            --negro-card: #141414;
+            --gris-texto: #8e8e93;
             --blanco: #ffffff;
+            --verde-verificado: #28a745;
         }
 
         body { 
             background-color: var(--negro-puro); 
             color: var(--blanco); 
             font-family: 'Inter', -apple-system, sans-serif;
-            margin: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
+            margin: 0; display: flex; flex-direction: column; align-items: center; min-height: 100vh;
         }
 
-        /* HEADER PREMIUM */
+        /* HEADER */
         header {
-            width: 100%;
-            padding: 20px 40px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-sizing: border-box;
-            border-bottom: 1px solid #222;
-            background: rgba(10, 10, 10, 0.9);
-            position: sticky; top: 0; z-index: 100;
+            width: 100%; padding: 20px 40px; display: flex; justify-content: space-between;
+            align-items: center; border-bottom: 1px solid #222; background: rgba(0,0,0,0.9);
+            position: sticky; top: 0; z-index: 1000; box-sizing: border-box;
         }
+        .brand { font-size: 1.8rem; font-weight: 900; color: var(--amarillo); letter-spacing: -1.5px; }
+        .logo-w { background: var(--amarillo); color: #000; font-weight: 900; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border-radius: 6px; font-style: italic; }
 
-        .brand-name { font-size: 1.8rem; font-weight: 800; color: var(--amarillo); text-transform: uppercase; letter-spacing: -1px; }
-        .logo-w { background-color: var(--amarillo); color: #000; font-weight: 900; font-size: 1.5rem; width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; border-radius: 8px; font-style: italic; }
-
-        /* CONTENEDOR FORMULARIO */
-        .main-container { 
-            width: 95%; max-width: 480px; margin: 40px 0; 
-            background: var(--negro-card); padding: 40px; 
-            border-radius: 16px; border: 1px solid #222; 
-            box-shadow: 0 20px 40px rgba(0,0,0,0.4); 
+        /* AUTH BOX */
+        .auth-box { 
+            width: 90%; max-width: 400px; margin-top: 60px; background: var(--negro-card); 
+            padding: 40px; border-radius: 20px; border: 1px solid #333; text-align: center;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
         }
+        .auth-title { font-size: 1.5rem; font-weight: 700; margin-bottom: 10px; color: var(--amarillo); }
+        .auth-subtitle { font-size: 0.85rem; color: var(--gris-texto); margin-bottom: 30px; }
 
-        .descripcion-top { font-size: 0.9rem; color: var(--gris-texto); text-align: center; margin-bottom: 30px; line-height: 1.6; }
-
-        form { display: flex; flex-direction: column; gap: 20px; }
-        .input-group { display: flex; flex-direction: column; gap: 8px; }
-        label { font-size: 0.85rem; font-weight: 600; color: var(--blanco); text-transform: uppercase; letter-spacing: 0.5px; }
-        
         input { 
-            padding: 16px; background-color: #000; border: 1px solid #333; 
-            border-radius: 10px; color: white; font-size: 1rem; transition: all 0.3s ease;
+            width: 100%; padding: 16px; margin-bottom: 15px; background: #000; 
+            border: 1px solid #333; border-radius: 12px; color: #fff; font-size: 1rem;
+            box-sizing: border-box; transition: 0.3s;
         }
         input:focus { border-color: var(--amarillo); outline: none; }
 
-        button#submitBtn { 
-            padding: 18px; background-color: var(--amarillo); color: #000; 
-            font-weight: 700; border: none; border-radius: 10px; 
-            cursor: pointer; font-size: 1.1rem; text-transform: uppercase; margin-top: 10px;
+        .btn-main { 
+            width: 100%; padding: 18px; background: var(--amarillo); color: #000; 
+            border: none; border-radius: 12px; font-weight: 800; cursor: pointer; 
+            text-transform: uppercase; letter-spacing: 1px;
         }
 
-        /* FEED DE PEDIDOS */
-        .feed-section { width: 95%; max-width: 480px; margin-bottom: 60px; }
-        .feed-title { text-align: center; color: var(--amarillo); font-size: 1rem; letter-spacing: 2px; margin-bottom: 25px; text-transform: uppercase; }
+        /* PANEL POST-LOGIN */
+        #mainPanel { display: none; width: 95%; max-width: 500px; flex-direction: column; }
 
+        .form-hero { 
+            background: var(--negro-card); padding: 35px; border-radius: 20px; 
+            margin: 30px 0; border: 1px solid #222; text-align: center;
+        }
+        .form-hero h2 { font-size: 1.1rem; margin-bottom: 15px; color: #fff; line-height: 1.4; }
+        .form-hero span { color: var(--amarillo); font-weight: 800; }
+
+        /* LISTA DE PEDIDOS */
         .card-pedido { 
-            background: var(--negro-card); border: 1px solid #222; 
-            padding: 25px; border-radius: 16px; margin-bottom: 20px; 
-            transition: 0.3s;
+            background: var(--negro-card); border: 1px solid #222; padding: 25px; 
+            border-radius: 18px; margin-bottom: 20px; position: relative;
         }
+        .insignia-wrapper { display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px; }
+        .product-title { font-size: 1.3rem; font-weight: 800; text-transform: uppercase; }
+        .stars { color: var(--amarillo); font-size: 0.9rem; letter-spacing: 2px; }
         
-        .card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px; }
-        .prod-name { font-size: 1.4rem; font-weight: 700; color: var(--blanco); text-transform: uppercase; }
-        .badge-verificado { font-size: 0.65rem; color: #28a745; border: 1px solid #28a745; padding: 2px 6px; border-radius: 4px; }
-        
-        .prod-info { font-size: 0.9rem; color: var(--gris-texto); margin-bottom: 20px; line-height: 1.5; }
+        .user-tag { font-size: 0.8rem; color: var(--gris-texto); margin-bottom: 15px; }
+        .badge-elite { 
+            font-size: 0.65rem; background: rgba(255, 215, 0, 0.1); 
+            color: var(--amarillo); padding: 4px 10px; border-radius: 5px; 
+            font-weight: 700; border: 1px solid var(--amarillo);
+        }
 
-        .btn-adquirir { 
+        .btn-pay { 
             width: 100%; background: transparent; color: var(--amarillo); 
-            border: 2px solid var(--amarillo); padding: 14px; border-radius: 10px; 
-            font-weight: 700; cursor: pointer; text-transform: uppercase; font-size: 0.9rem;
+            border: 2px solid var(--amarillo); padding: 14px; border-radius: 12px; 
+            font-weight: 800; cursor: pointer; transition: 0.3s;
         }
-        .btn-adquirir:hover { background: var(--amarillo); color: #000; }
-        .tasa-txt { display: block; font-size: 0.65rem; margin-top: 4px; opacity: 0.7; }
+        .btn-pay:hover { background: var(--amarillo); color: #000; }
 
-        /* LEGAL */
-        footer { padding: 40px; text-align: center; border-top: 1px solid #222; width: 100%; }
-        .legal-trigger { color: var(--gris-texto); font-size: 0.8rem; cursor: pointer; text-decoration: underline; }
-
-        #modalLegal {
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.95); z-index: 1000; justify-content: center; align-items: center;
-        }
-        .modal-body {
-            background: #111; padding: 35px; border-radius: 16px; border: 1px solid var(--amarillo);
-            max-width: 450px; width: 90%; max-height: 70vh; overflow-y: auto;
-        }
-        .modal-body h2 { color: var(--amarillo); margin-top: 0; }
-        .modal-body p { font-size: 0.9rem; color: #ccc; line-height: 1.6; }
-        .close-modal { width: 100%; padding: 12px; background: var(--amarillo); border: none; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 20px; }
+        .logout-btn { color: var(--gris-texto); font-size: 0.8rem; cursor: pointer; margin-top: 20px; text-decoration: underline; }
     </style>
 </head>
 <body>
 
     <header>
-        <div class="brand-name">WANTED</div>
+        <div class="brand">WANTED</div>
         <div class="logo-w">W</div>
     </header>
 
-    <div class="main-container">
-        <div class="descripcion-top">Publica tu requerimiento de forma segura. Los mejores vendedores competirán por tu pedido.</div>
-        <form id="orderForm">
-            <div class="input-group">
-                <label>Nombre o Alias</label>
-                <input type="text" id="nombre" placeholder="Ej: Carlos_Pro" required>
-            </div>
-            <div class="input-group">
-                <label>Producto / Repuesto Buscado</label>
-                <input type="text" id="producto" placeholder="Marca, modelo o referencia" required>
-            </div>
-            <div class="input-group">
-                <label>Cantidad</label>
-                <input type="number" id="cantidad" placeholder="1" required>
-            </div>
-            <button type="submit" id="submitBtn">Publicar Pedido</button>
+    <div class="auth-box" id="authSection">
+        <div class="auth-title" id="t-auth">BIENVENIDO</div>
+        <div class="auth-subtitle" id="st-auth">Ingresa tus credenciales para acceder al mercado</div>
+        <form id="authForm">
+            <input type="email" id="email" placeholder="Tu Email" required>
+            <input type="password" id="pass" placeholder="Tu Contraseña" required minlength="6">
+            <button type="submit" class="btn-main" id="btn-auth">ENTRAR</button>
         </form>
+        <p class="logout-btn" onclick="toggleAuth()" id="switchBtn">¿Nuevo aquí? Regístrate de forma segura</p>
     </div>
 
-    <div class="feed-section">
-        <h3 class="feed-title">Pedidos Activos en el Mercado</h3>
-        <div id="contenedorPedidos">
-            </div>
-    </div>
-
-    <footer>
-        <span class="legal-trigger" onclick="toggleModal()">Términos, Condiciones y Privacidad</span>
-        <p style="font-size: 0.7rem; color: #444; margin-top: 15px;">WANTED MARKETPLACE © 2026</p>
-    </footer>
-
-    <div id="modalLegal">
-        <div class="modal-body">
-            <h2>Marco Legal</h2>
-            <p><strong>1. Intermediación:</strong> WANTED conecta partes. No garantizamos el estado de los productos ni el cumplimiento del pago final.</p>
-            <p><strong>2. Tasa de Acceso:</strong> El pago de USD $3,73 libera los datos del comprador. No es reembolsable si el trato no se cierra.</p>
-            <p><strong>3. Privacidad:</strong> Los datos se usan exclusivamente para la conexión comercial entre las partes interesadas.</p>
-            <button class="close-modal" onclick="toggleModal()">ACEPTAR</button>
+    <div id="mainPanel">
+        <div class="form-hero">
+            <h2>Publica lo que buscas.<br><span>Nuestra red de vendedores competirá por ofrecerte el precio más bajo del mercado.</span></h2>
+            <form id="orderForm">
+                <input type="text" id="prod" placeholder="¿Qué necesitas comprar?" required>
+                <input type="number" id="cant" placeholder="Cantidad" required>
+                <button type="submit" class="btn-main">Publicar Pedido</button>
+            </form>
+            <p class="logout-btn" onclick="signOut()">Cerrar Sesión</p>
         </div>
+
+        <div id="feed">
+            </div>
     </div>
 
     <script>
         const SUPABASE_URL = 'https://gtngqwnbyjqqmuzsztnv.supabase.co';
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd0bmdxd25ieWpxcW11enN6dG52Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMzNjgyMzksImV4cCI6MjA4ODk0NDIzOX0.vSxxHrayzEJG_HwRXcyOCb5vZuDZksrQe6GnAwhYD1w';
-        
         const { createClient } = supabase;
         const _supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-        function toggleModal() {
-            const m = document.getElementById('modalLegal');
-            m.style.display = (m.style.display === 'flex') ? 'none' : 'flex';
+        let modeLogin = true;
+
+        function toggleAuth() {
+            modeLogin = !modeLogin;
+            document.getElementById('t-auth').innerText = modeLogin ? 'BIENVENIDO' : 'CREAR CUENTA';
+            document.getElementById('btn-auth').innerText = modeLogin ? 'ENTRAR' : 'REGISTRARME';
+            document.getElementById('switchBtn').innerText = modeLogin ? '¿Nuevo aquí? Regístrate de forma segura' : '¿Ya tienes cuenta? Inicia sesión';
         }
 
-        async function cargarPedidos() {
-            const { data, error } = await _supabase.from('pedidos').select('*').order('id', { ascending: false });
-            if (error) return;
-            
-            const contenedor = document.getElementById('contenedorPedidos');
-            contenedor.innerHTML = '';
+        async function signOut() {
+            await _supabase.auth.signOut();
+            location.reload();
+        }
 
+        // CONTROL DE SESIÓN
+        document.getElementById('authForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('pass').value;
+            const btn = document.getElementById('btn-auth');
+            btn.innerText = 'VERIFICANDO...';
+
+            let res;
+            if (modeLogin) {
+                res = await _supabase.auth.signInWithPassword({ email, password });
+            } else {
+                res = await _supabase.auth.signUp({ email, password });
+            }
+
+            if (res.error) {
+                alert('ERROR: ' + res.error.message);
+                btn.innerText = modeLogin ? 'ENTRAR' : 'REGISTRARME';
+            } else {
+                if (!modeLogin) alert('Revisa tu email para confirmar tu cuenta y poder entrar.');
+                else initPanel();
+            }
+        });
+
+        async function initPanel() {
+            const { data: { user } } = await _supabase.auth.getUser();
+            if (user) {
+                document.getElementById('authSection').style.display = 'none';
+                document.getElementById('mainPanel').style.display = 'flex';
+                renderPedidos();
+            }
+        }
+
+        async function renderPedidos() {
+            const { data } = await _supabase.from('pedidos').select('*').order('id', { ascending: false });
+            const feed = document.getElementById('feed');
+            feed.innerHTML = '';
             data.forEach(p => {
                 const card = document.createElement('div');
                 card.className = 'card-pedido';
                 card.innerHTML = `
-                    <div class="card-header">
-                        <span class="prod-name">${p.producto}</span>
-                        <span class="badge-verificado">✓ VERIFICADO</span>
+                    <div class="insignia-wrapper">
+                        <span class="product-title">${p.producto}</span>
+                        <span class="badge-elite">COMPRADOR ÉLITE</span>
                     </div>
-                    <div class="prod-info">
-                        Cantidad: <b>${p.cantidad}</b><br>
-                        Solicitante: ${p.nombre}
-                    </div>
-                    <button class="btn-adquirir" onclick="alert('Redirigiendo a dLocal Go para procesar USD $3,73...')">
+                    <div class="stars">★★★★★</div>
+                    <div class="user-tag">Usuario: ${p.nombre.split('@')[0]}... | Cantidad: ${p.cantidad}</div>
+                    <button class="btn-pay" onclick="alert('Redirigiendo a dLocal Go para liberar contacto (USD $3,73)...')">
                         ADQUIRIR CONTACTO
-                        <span class="tasa-txt">TASA DE ACCESO: USD $3,73</span>
+                        <span style="display:block; font-size:0.6rem; opacity:0.8;">TASA SEGURA: USD $3,73</span>
                     </button>
                 `;
-                contenedor.appendChild(card);
+                feed.appendChild(card);
             });
         }
 
         document.getElementById('orderForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            const btn = document.getElementById('submitBtn');
-            btn.innerText = 'PROCESANDO...';
-            btn.disabled = true;
-
-            const { error } = await _supabase.from('pedidos').insert([{ 
-                nombre: document.getElementById('nombre').value, 
-                producto: document.getElementById('producto').value, 
-                cantidad: parseInt(document.getElementById('cantidad').value) 
+            const { data: { user } } = await _supabase.auth.getUser();
+            await _supabase.from('pedidos').insert([{ 
+                nombre: user.email, 
+                producto: document.getElementById('prod').value, 
+                cantidad: parseInt(document.getElementById('cant').value) 
             }]);
-
-            if (!error) { 
-                document.getElementById('orderForm').reset(); 
-                cargarPedidos(); 
-            }
-            btn.innerText = 'Publicar Pedido';
-            btn.disabled = false;
+            document.getElementById('orderForm').reset();
+            renderPedidos();
         });
 
-        cargarPedidos();
+        initPanel();
     </script>
 </body>
-        </html>
+    </html>
+        
