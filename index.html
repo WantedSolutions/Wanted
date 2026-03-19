@@ -14,7 +14,7 @@
             --gris-texto: #8e8e93;
             --blanco: #ffffff;
             --dorado-glow: rgba(255, 215, 0, 0.3);
-            --azul-comprador: #007AFF;
+            --verde-verificado: #00FF88;
         }
 
         body { 
@@ -54,34 +54,33 @@
             background: var(--negro-card); padding: 40px; border-radius: 24px; 
             margin: 40px 0; border: 1px solid #222; text-align: center;
         }
-        .badge-comprador { 
-            display: inline-block; padding: 4px 12px; border-radius: 20px; 
-            background: rgba(0, 122, 255, 0.1); color: var(--azul-comprador); 
-            font-size: 0.7rem; font-weight: 800; margin-bottom: 15px; border: 1px solid var(--azul-comprador);
-        }
+        .hero-title { font-size: 1.4rem; font-weight: 800; line-height: 1.4; margin-bottom: 25px; }
+        .hero-title span { color: var(--amarillo); }
 
         /* SECCIÓN VENDEDOR (PEDIDOS ACTIVOS) */
         .card-pedido { 
             background: var(--negro-card); border: 1px solid #222; padding: 30px; 
-            border-radius: 22px; margin-bottom: 25px; position: relative;
+            border-radius: 22px; margin-bottom: 25px;
         }
-        .badge-vendedor { 
-            font-size: 0.7rem; background: rgba(255, 215, 0, 0.1); 
-            color: var(--amarillo); padding: 5px 12px; border-radius: 6px; 
-            font-weight: 800; border: 1px solid var(--amarillo);
+        .header-card { display: flex; justify-content: space-between; align-items: center; }
+        .product-title { font-size: 1.4rem; font-weight: 900; color: var(--amarillo); text-transform: uppercase; }
+        
+        .badge-verificado { 
+            font-size: 0.65rem; color: var(--verde-verificado); font-weight: 800;
+            display: flex; align-items: center; gap: 5px;
         }
 
-        .product-title { font-size: 1.4rem; font-weight: 900; color: var(--amarillo); display: block; margin-top: 10px; }
         .user-tag { font-size: 0.85rem; color: var(--gris-texto); margin: 15px 0; display: block; }
 
-        /* BOTÓN DE PAGO RE-ESTABLECIDO */
-        .btn-pay { 
-            width: 100%; background: transparent; color: var(--amarillo); 
-            border: 2px solid var(--amarillo); padding: 16px; border-radius: 14px; 
+        /* BOTÓN DE OFERTA VENDEDOR */
+        .btn-offer { 
+            width: 100%; background: var(--amarillo); color: #000; 
+            border: none; padding: 18px; border-radius: 14px; 
             font-weight: 900; cursor: pointer; display: flex; flex-direction: column; align-items: center;
+            transition: 0.3s;
         }
-        .btn-pay:hover { background: var(--amarillo); color: #000; }
-        .pay-price { font-size: 0.7rem; margin-top: 4px; font-weight: 400; }
+        .btn-offer:hover { transform: scale(1.02); box-shadow: 0 0 20px var(--dorado-glow); }
+        .offer-price { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; margin-top: 2px; }
 
         .logout-btn { color: var(--gris-texto); font-size: 0.8rem; cursor: pointer; margin-top: 20px; text-decoration: underline; }
     </style>
@@ -96,21 +95,23 @@
     <div class="auth-box" id="authSection">
         <h2 id="t-auth">ACCESO ÉLITE</h2>
         <form id="authForm">
-            <input type="email" id="email" placeholder="Tu Email" required>
-            <input type="password" id="pass" placeholder="Tu Contraseña" required minlength="6">
+            <input type="email" id="email" placeholder="Email" required>
+            <input type="password" id="pass" placeholder="Contraseña" required minlength="6">
             <button type="submit" class="btn-main" id="btn-auth">ENTRAR</button>
         </form>
-        <p class="logout-btn" onclick="toggleAuth()" id="switchBtn">¿Sin cuenta? Regístrate aquí</p>
+        <p class="logout-btn" onclick="toggleAuth()" id="switchBtn">¿Nuevo aquí? Regístrate</p>
     </div>
 
     <div id="mainPanel">
         <div class="form-hero">
-            <span class="badge-comprador">PERFIL: COMPRADOR ÉLITE</span>
-            <h2>¿Qué producto buscas hoy?<br><span style="color: var(--amarillo)">Vendedores competirán por tu precio.</span></h2>
+            <h2 class="hero-title">
+                Publica lo que quieras y nuestra red de compradores <br>
+                <span>competirán por el precio más bajo del mercado.</span>
+            </h2>
             <form id="orderForm">
-                <input type="text" id="prod" placeholder="Nombre del producto" required>
+                <input type="text" id="prod" placeholder="¿Qué estás buscando?" required>
                 <input type="number" id="cant" placeholder="Cantidad" required>
-                <button type="submit" class="btn-main">Lanzar pedido al mercado</button>
+                <button type="submit" class="btn-main">Lanzar pedido</button>
             </form>
             <p class="logout-btn" onclick="signOut()">Cerrar Sesión</p>
         </div>
@@ -147,7 +148,7 @@
                 if (error) alert(error.message);
             } else {
                 const { error } = await _supabase.auth.signUp({ email, password });
-                if (error) alert(error.message); else alert("¡Bienvenido! Entrando...");
+                if (error) alert(error.message);
             }
         });
 
@@ -168,12 +169,14 @@
                 const card = document.createElement('div');
                 card.className = 'card-pedido';
                 card.innerHTML = `
-                    <span class="badge-vendedor">OFERTA PARA VENDEDOR</span>
-                    <span class="product-title">${p.producto}</span>
-                    <span class="user-tag">Solicitado por: ${p.nombre.split('@')[0]} | Cantidad: ${p.cantidad}</span>
-                    <button class="btn-pay" onclick="window.location.href='https://www.dlocalgo.com/'">
-                        REVELAR DATOS DEL COMPRADOR
-                        <span class="pay-price">COSTO DE CONEXIÓN: $3.73 USD</span>
+                    <div class="header-card">
+                        <span class="product-title">${p.producto}</span>
+                        <span class="badge-verificado">● VERIFICADO</span>
+                    </div>
+                    <span class="user-tag">Comprador: ${p.nombre.split('@')[0]} | Unidades: ${p.cantidad}</span>
+                    <button class="btn-offer" onclick="window.location.href='https://www.dlocalgo.com/'">
+                        OFERTAR AHORA
+                        <span class="offer-price">COSTO DE CONEXIÓN: $3,73 USD</span>
                     </button>
                 `;
                 feed.appendChild(card);
