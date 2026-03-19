@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WANTED | Elite Marketplace</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
             --amarillo: #FFD700;
@@ -12,6 +13,8 @@
             --negro-card: #141414;
             --gris-texto: #8e8e93;
             --blanco: #ffffff;
+            --dorado-glow: rgba(255, 215, 0, 0.3);
+            --azul-comprador: #007AFF;
         }
 
         body { 
@@ -23,40 +26,62 @@
 
         header {
             width: 100%; padding: 20px 40px; display: flex; justify-content: space-between;
-            align-items: center; border-bottom: 1px solid #222; background: rgba(0,0,0,0.9);
+            align-items: center; border-bottom: 1px solid #222; background: rgba(0,0,0,0.95);
             position: sticky; top: 0; z-index: 1000; box-sizing: border-box;
         }
         .brand { font-size: 1.8rem; font-weight: 900; color: var(--amarillo); letter-spacing: -1.5px; }
-        .logo-w { background: var(--amarillo); color: #000; font-weight: 900; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border-radius: 6px; font-style: italic; }
+        .logo-w { background: var(--amarillo); color: #000; font-weight: 900; width: 42px; height: 42px; display: flex; align-items: center; justify-content: center; border-radius: 8px; font-style: italic; box-shadow: 0 0 15px var(--dorado-glow); }
 
         .auth-box { 
-            width: 90%; max-width: 400px; margin-top: 60px; background: var(--negro-card); 
-            padding: 40px; border-radius: 20px; border: 1px solid #333; text-align: center;
+            width: 90%; max-width: 420px; margin-top: 60px; background: var(--negro-card); 
+            padding: 45px; border-radius: 24px; border: 1px solid #333; text-align: center;
         }
 
         input { 
-            width: 100%; padding: 16px; margin-bottom: 15px; background: #000; 
-            border: 1px solid #333; border-radius: 12px; color: #fff; box-sizing: border-box;
+            width: 100%; padding: 18px; margin-bottom: 18px; background: #000; 
+            border: 1px solid #333; border-radius: 14px; color: #fff; box-sizing: border-box;
         }
 
         .btn-main { 
-            width: 100%; padding: 18px; background: var(--amarillo); color: #000; 
-            border: none; border-radius: 12px; font-weight: 800; cursor: pointer; 
-            text-transform: uppercase;
+            width: 100%; padding: 20px; background: var(--amarillo); color: #000; 
+            border: none; border-radius: 14px; font-weight: 900; cursor: pointer; text-transform: uppercase;
         }
 
-        #mainPanel { display: none; width: 95%; max-width: 500px; flex-direction: column; }
+        #mainPanel { display: none; width: 95%; max-width: 550px; flex-direction: column; }
 
+        /* SECCIÓN COMPRADOR (PUBLICAR) */
         .form-hero { 
-            background: var(--negro-card); padding: 35px; border-radius: 20px; 
-            margin: 30px 0; border: 1px solid #222; text-align: center;
+            background: var(--negro-card); padding: 40px; border-radius: 24px; 
+            margin: 40px 0; border: 1px solid #222; text-align: center;
         }
-        .form-hero span { color: var(--amarillo); font-weight: 800; }
+        .badge-comprador { 
+            display: inline-block; padding: 4px 12px; border-radius: 20px; 
+            background: rgba(0, 122, 255, 0.1); color: var(--azul-comprador); 
+            font-size: 0.7rem; font-weight: 800; margin-bottom: 15px; border: 1px solid var(--azul-comprador);
+        }
 
+        /* SECCIÓN VENDEDOR (PEDIDOS ACTIVOS) */
         .card-pedido { 
-            background: var(--negro-card); border: 1px solid #222; padding: 25px; 
-            border-radius: 18px; margin-bottom: 20px;
+            background: var(--negro-card); border: 1px solid #222; padding: 30px; 
+            border-radius: 22px; margin-bottom: 25px; position: relative;
         }
+        .badge-vendedor { 
+            font-size: 0.7rem; background: rgba(255, 215, 0, 0.1); 
+            color: var(--amarillo); padding: 5px 12px; border-radius: 6px; 
+            font-weight: 800; border: 1px solid var(--amarillo);
+        }
+
+        .product-title { font-size: 1.4rem; font-weight: 900; color: var(--amarillo); display: block; margin-top: 10px; }
+        .user-tag { font-size: 0.85rem; color: var(--gris-texto); margin: 15px 0; display: block; }
+
+        /* BOTÓN DE PAGO RE-ESTABLECIDO */
+        .btn-pay { 
+            width: 100%; background: transparent; color: var(--amarillo); 
+            border: 2px solid var(--amarillo); padding: 16px; border-radius: 14px; 
+            font-weight: 900; cursor: pointer; display: flex; flex-direction: column; align-items: center;
+        }
+        .btn-pay:hover { background: var(--amarillo); color: #000; }
+        .pay-price { font-size: 0.7rem; margin-top: 4px; font-weight: 400; }
 
         .logout-btn { color: var(--gris-texto); font-size: 0.8rem; cursor: pointer; margin-top: 20px; text-decoration: underline; }
     </style>
@@ -69,25 +94,27 @@
     </header>
 
     <div class="auth-box" id="authSection">
-        <h2 id="t-auth">BIENVENIDO</h2>
+        <h2 id="t-auth">ACCESO ÉLITE</h2>
         <form id="authForm">
-            <input type="email" id="email" placeholder="Email" required>
-            <input type="password" id="pass" placeholder="Contraseña" required>
+            <input type="email" id="email" placeholder="Tu Email" required>
+            <input type="password" id="pass" placeholder="Tu Contraseña" required minlength="6">
             <button type="submit" class="btn-main" id="btn-auth">ENTRAR</button>
         </form>
-        <p class="logout-btn" onclick="toggleAuth()" id="switchBtn">¿Nuevo aquí? Regístrate</p>
+        <p class="logout-btn" onclick="toggleAuth()" id="switchBtn">¿Sin cuenta? Regístrate aquí</p>
     </div>
 
     <div id="mainPanel">
         <div class="form-hero">
-            <h2>Publica lo que buscas.<br><span>Los vendedores competirán por darte el mejor precio.</span></h2>
+            <span class="badge-comprador">PERFIL: COMPRADOR ÉLITE</span>
+            <h2>¿Qué producto buscas hoy?<br><span style="color: var(--amarillo)">Vendedores competirán por tu precio.</span></h2>
             <form id="orderForm">
-                <input type="text" id="prod" placeholder="¿Qué buscas?" required>
+                <input type="text" id="prod" placeholder="Nombre del producto" required>
                 <input type="number" id="cant" placeholder="Cantidad" required>
-                <button type="submit" class="btn-main">Publicar Pedido</button>
+                <button type="submit" class="btn-main">Lanzar pedido al mercado</button>
             </form>
             <p class="logout-btn" onclick="signOut()">Cerrar Sesión</p>
         </div>
+
         <div id="feed"></div>
     </div>
 
@@ -95,28 +122,20 @@
         const SUPABASE_URL = 'https://gtngqwnbyjqqmuzsztnv.supabase.co';
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd0bmdxd25ieWpxcW11enN6dG52Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMzNjgyMzksImV4cCI6MjA4ODk0NDIzOX0.vSxxHrayzEJG_HwRXcyOCb5vZuDZksrQe6GnAwhYD1w';
         
-        // CONFIGURACIÓN DE SEGURIDAD PARA DETECTAR SESIÓN DESDE URL
         const { createClient } = supabase;
         const _supabase = createClient(SUPABASE_URL, SUPABASE_KEY, {
-            auth: {
-                autoRefreshToken: true,
-                persistSession: true,
-                detectSessionInUrl: true
-            }
+            auth: { persistSession: true, detectSessionInUrl: true }
         });
 
         let modeLogin = true;
 
         function toggleAuth() {
             modeLogin = !modeLogin;
-            document.getElementById('t-auth').innerText = modeLogin ? 'BIENVENIDO' : 'CREAR CUENTA';
+            document.getElementById('t-auth').innerText = modeLogin ? 'ACCESO ÉLITE' : 'CREAR CUENTA';
             document.getElementById('btn-auth').innerText = modeLogin ? 'ENTRAR' : 'REGISTRARME';
         }
 
-        async function signOut() {
-            await _supabase.auth.signOut();
-            location.reload();
-        }
+        async function signOut() { await _supabase.auth.signOut(); location.reload(); }
 
         document.getElementById('authForm').addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -128,11 +147,10 @@
                 if (error) alert(error.message);
             } else {
                 const { error } = await _supabase.auth.signUp({ email, password });
-                if (error) alert(error.message); else alert("Confirma tu correo para activar el acceso.");
+                if (error) alert(error.message); else alert("¡Bienvenido! Entrando...");
             }
         });
 
-        // DETECTOR DE SESIÓN ACTIVA (Esto soluciona el salto del correo)
         _supabase.auth.onAuthStateChange((event, session) => {
             if (session) {
                 document.getElementById('authSection').style.display = 'none';
@@ -145,10 +163,19 @@
             const { data } = await _supabase.from('pedidos').select('*').order('id', { ascending: false });
             const feed = document.getElementById('feed');
             feed.innerHTML = '';
+            
             data.forEach(p => {
                 const card = document.createElement('div');
                 card.className = 'card-pedido';
-                card.innerHTML = `<strong>${p.producto}</strong> - Cantidad: ${p.cantidad}<br><small>Publicado por: ${p.nombre}</small>`;
+                card.innerHTML = `
+                    <span class="badge-vendedor">OFERTA PARA VENDEDOR</span>
+                    <span class="product-title">${p.producto}</span>
+                    <span class="user-tag">Solicitado por: ${p.nombre.split('@')[0]} | Cantidad: ${p.cantidad}</span>
+                    <button class="btn-pay" onclick="window.location.href='https://www.dlocalgo.com/'">
+                        REVELAR DATOS DEL COMPRADOR
+                        <span class="pay-price">COSTO DE CONEXIÓN: $3.73 USD</span>
+                    </button>
+                `;
                 feed.appendChild(card);
             });
         }
@@ -156,12 +183,13 @@
         document.getElementById('orderForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const { data: { user } } = await _supabase.auth.getUser();
-            const { error } = await _supabase.from('pedidos').insert([{ 
+            await _supabase.from('pedidos').insert([{ 
                 nombre: user.email, 
                 producto: document.getElementById('prod').value, 
                 cantidad: parseInt(document.getElementById('cant').value) 
             }]);
-            if (!error) { document.getElementById('orderForm').reset(); renderPedidos(); }
+            document.getElementById('orderForm').reset();
+            renderPedidos();
         });
     </script>
 </body>
