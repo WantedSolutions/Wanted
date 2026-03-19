@@ -12,17 +12,15 @@
             --negro-card: #141414;
             --gris-texto: #8e8e93;
             --blanco: #ffffff;
-            --verde-verificado: #28a745;
         }
 
         body { 
             background-color: var(--negro-puro); 
             color: var(--blanco); 
-            font-family: 'Inter', -apple-system, sans-serif;
+            font-family: 'Inter', sans-serif;
             margin: 0; display: flex; flex-direction: column; align-items: center; min-height: 100vh;
         }
 
-        /* HEADER PREMIUM */
         header {
             width: 100%; padding: 20px 40px; display: flex; justify-content: space-between;
             align-items: center; border-bottom: 1px solid #222; background: rgba(0,0,0,0.9);
@@ -31,60 +29,34 @@
         .brand { font-size: 1.8rem; font-weight: 900; color: var(--amarillo); letter-spacing: -1.5px; }
         .logo-w { background: var(--amarillo); color: #000; font-weight: 900; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border-radius: 6px; font-style: italic; }
 
-        /* AUTH BOX (REGISTRO Y LOGIN) */
         .auth-box { 
             width: 90%; max-width: 400px; margin-top: 60px; background: var(--negro-card); 
             padding: 40px; border-radius: 20px; border: 1px solid #333; text-align: center;
-            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
         }
-        .auth-title { font-size: 1.5rem; font-weight: 700; margin-bottom: 10px; color: var(--amarillo); }
-        .auth-subtitle { font-size: 0.85rem; color: var(--gris-texto); margin-bottom: 30px; }
 
         input { 
             width: 100%; padding: 16px; margin-bottom: 15px; background: #000; 
-            border: 1px solid #333; border-radius: 12px; color: #fff; font-size: 1rem;
-            box-sizing: border-box; transition: 0.3s;
+            border: 1px solid #333; border-radius: 12px; color: #fff; box-sizing: border-box;
         }
-        input:focus { border-color: var(--amarillo); outline: none; }
 
         .btn-main { 
             width: 100%; padding: 18px; background: var(--amarillo); color: #000; 
             border: none; border-radius: 12px; font-weight: 800; cursor: pointer; 
-            text-transform: uppercase; letter-spacing: 1px;
+            text-transform: uppercase;
         }
 
-        /* PANEL PRINCIPAL (VISIBLE SOLO TRAS LOGUEARSE) */
         #mainPanel { display: none; width: 95%; max-width: 500px; flex-direction: column; }
 
         .form-hero { 
             background: var(--negro-card); padding: 35px; border-radius: 20px; 
             margin: 30px 0; border: 1px solid #222; text-align: center;
         }
-        .form-hero h2 { font-size: 1.1rem; margin-bottom: 15px; color: #fff; line-height: 1.4; }
         .form-hero span { color: var(--amarillo); font-weight: 800; }
 
-        /* CARTAS DE PEDIDOS */
         .card-pedido { 
             background: var(--negro-card); border: 1px solid #222; padding: 25px; 
-            border-radius: 18px; margin-bottom: 20px; position: relative;
+            border-radius: 18px; margin-bottom: 20px;
         }
-        .insignia-wrapper { display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px; }
-        .product-title { font-size: 1.3rem; font-weight: 800; text-transform: uppercase; }
-        .stars { color: var(--amarillo); font-size: 0.9rem; letter-spacing: 2px; }
-        
-        .user-tag { font-size: 0.8rem; color: var(--gris-texto); margin-bottom: 15px; }
-        .badge-elite { 
-            font-size: 0.65rem; background: rgba(255, 215, 0, 0.1); 
-            color: var(--amarillo); padding: 4px 10px; border-radius: 5px; 
-            font-weight: 700; border: 1px solid var(--amarillo);
-        }
-
-        .btn-pay { 
-            width: 100%; background: transparent; color: var(--amarillo); 
-            border: 2px solid var(--amarillo); padding: 14px; border-radius: 12px; 
-            font-weight: 800; cursor: pointer; transition: 0.3s;
-        }
-        .btn-pay:hover { background: var(--amarillo); color: #000; }
 
         .logout-btn { color: var(--gris-texto); font-size: 0.8rem; cursor: pointer; margin-top: 20px; text-decoration: underline; }
     </style>
@@ -97,36 +69,41 @@
     </header>
 
     <div class="auth-box" id="authSection">
-        <div class="auth-title" id="t-auth">BIENVENIDO</div>
-        <div class="auth-subtitle" id="st-auth">Ingresa tus credenciales para acceder al mercado</div>
+        <h2 id="t-auth">BIENVENIDO</h2>
         <form id="authForm">
-            <input type="email" id="email" placeholder="Tu Email" required>
-            <input type="password" id="pass" placeholder="Tu Contraseña" required minlength="6">
+            <input type="email" id="email" placeholder="Email" required>
+            <input type="password" id="pass" placeholder="Contraseña" required>
             <button type="submit" class="btn-main" id="btn-auth">ENTRAR</button>
         </form>
-        <p class="logout-btn" onclick="toggleAuth()" id="switchBtn">¿Nuevo aquí? Regístrate de forma segura</p>
+        <p class="logout-btn" onclick="toggleAuth()" id="switchBtn">¿Nuevo aquí? Regístrate</p>
     </div>
 
     <div id="mainPanel">
         <div class="form-hero">
-            <h2>Publica lo que buscas.<br><span>Nuestra red de vendedores competirá por ofrecerte el precio más bajo del mercado.</span></h2>
+            <h2>Publica lo que buscas.<br><span>Los vendedores competirán por darte el mejor precio.</span></h2>
             <form id="orderForm">
-                <input type="text" id="prod" placeholder="¿Qué necesitas comprar?" required>
+                <input type="text" id="prod" placeholder="¿Qué buscas?" required>
                 <input type="number" id="cant" placeholder="Cantidad" required>
                 <button type="submit" class="btn-main">Publicar Pedido</button>
             </form>
             <p class="logout-btn" onclick="signOut()">Cerrar Sesión</p>
         </div>
-
-        <div id="feed">
-            </div>
+        <div id="feed"></div>
     </div>
 
     <script>
         const SUPABASE_URL = 'https://gtngqwnbyjqqmuzsztnv.supabase.co';
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd0bmdxd25ieWpxcW11enN6dG52Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMzNjgyMzksImV4cCI6MjA4ODk0NDIzOX0.vSxxHrayzEJG_HwRXcyOCb5vZuDZksrQe6GnAwhYD1w';
+        
+        // CONFIGURACIÓN DE SEGURIDAD PARA DETECTAR SESIÓN DESDE URL
         const { createClient } = supabase;
-        const _supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+        const _supabase = createClient(SUPABASE_URL, SUPABASE_KEY, {
+            auth: {
+                autoRefreshToken: true,
+                persistSession: true,
+                detectSessionInUrl: true
+            }
+        });
 
         let modeLogin = true;
 
@@ -134,7 +111,6 @@
             modeLogin = !modeLogin;
             document.getElementById('t-auth').innerText = modeLogin ? 'BIENVENIDO' : 'CREAR CUENTA';
             document.getElementById('btn-auth').innerText = modeLogin ? 'ENTRAR' : 'REGISTRARME';
-            document.getElementById('switchBtn').innerText = modeLogin ? '¿Nuevo aquí? Regístrate de forma segura' : '¿Ya tienes cuenta? Inicia sesión';
         }
 
         async function signOut() {
@@ -142,41 +118,28 @@
             location.reload();
         }
 
-        // CONTROL DE ACCESO
         document.getElementById('authForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const email = document.getElementById('email').value;
             const password = document.getElementById('pass').value;
-            const btn = document.getElementById('btn-auth');
-            btn.innerText = 'VERIFICANDO...';
-
-            let res;
+            
             if (modeLogin) {
-                res = await _supabase.auth.signInWithPassword({ email, password });
+                const { error } = await _supabase.auth.signInWithPassword({ email, password });
+                if (error) alert(error.message);
             } else {
-                res = await _supabase.auth.signUp({ email, password });
-            }
-
-            if (res.error) {
-                alert('ERROR: ' + res.error.message);
-                btn.innerText = modeLogin ? 'ENTRAR' : 'REGISTRARME';
-            } else {
-                if (!modeLogin) {
-                    alert('REGISTRO EXITOSO: Revisa tu email para confirmar tu cuenta y poder entrar.');
-                } else {
-                    initPanel();
-                }
+                const { error } = await _supabase.auth.signUp({ email, password });
+                if (error) alert(error.message); else alert("Confirma tu correo para activar el acceso.");
             }
         });
 
-        async function initPanel() {
-            const { data: { user } } = await _supabase.auth.getUser();
-            if (user) {
+        // DETECTOR DE SESIÓN ACTIVA (Esto soluciona el salto del correo)
+        _supabase.auth.onAuthStateChange((event, session) => {
+            if (session) {
                 document.getElementById('authSection').style.display = 'none';
                 document.getElementById('mainPanel').style.display = 'flex';
                 renderPedidos();
             }
-        }
+        });
 
         async function renderPedidos() {
             const { data } = await _supabase.from('pedidos').select('*').order('id', { ascending: false });
@@ -185,47 +148,21 @@
             data.forEach(p => {
                 const card = document.createElement('div');
                 card.className = 'card-pedido';
-                card.innerHTML = `
-                    <div class="insignia-wrapper">
-                        <span class="product-title">${p.producto}</span>
-                        <span class="badge-elite">COMPRADOR ÉLITE</span>
-                    </div>
-                    <div class="stars">★★★★★</div>
-                    <div class="user-tag">Usuario: ${p.nombre.split('@')[0]}... | Cantidad: ${p.cantidad}</div>
-                    <button class="btn-pay" onclick="alert('Redirigiendo a pasarela de pago para liberar contacto (USD $3,73)...')">
-                        ADQUIRIR CONTACTO
-                        <span style="display:block; font-size:0.6rem; opacity:0.8;">TASA SEGURA: USD $3,73</span>
-                    </button>
-                `;
+                card.innerHTML = `<strong>${p.producto}</strong> - Cantidad: ${p.cantidad}<br><small>Publicado por: ${p.nombre}</small>`;
                 feed.appendChild(card);
             });
         }
 
-        // PUBLICAR PEDIDO
         document.getElementById('orderForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const { data: { user } } = await _supabase.auth.getUser();
-            
-            if (!user) {
-                alert("Debes estar logueado para publicar.");
-                return;
-            }
-
             const { error } = await _supabase.from('pedidos').insert([{ 
                 nombre: user.email, 
                 producto: document.getElementById('prod').value, 
                 cantidad: parseInt(document.getElementById('cant').value) 
             }]);
-
-            if (error) {
-                alert("Error al publicar: " + error.message);
-            } else {
-                document.getElementById('orderForm').reset();
-                renderPedidos();
-            }
+            if (!error) { document.getElementById('orderForm').reset(); renderPedidos(); }
         });
-
-        initPanel();
     </script>
 </body>
-            </html>
+    </html>
