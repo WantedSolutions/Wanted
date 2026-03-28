@@ -23,7 +23,6 @@
             color: var(--blanco); 
             font-family: 'Inter', sans-serif;
             margin: 0; display: flex; flex-direction: column; align-items: center; min-height: 100vh;
-            overflow-x: hidden;
         }
 
         header {
@@ -34,10 +33,10 @@
         .brand { font-size: 1.8rem; font-weight: 900; color: var(--amarillo); letter-spacing: -1.5px; cursor: pointer; }
         .logo-w { background: var(--amarillo); color: #000; font-weight: 900; width: 42px; height: 42px; display: flex; align-items: center; justify-content: center; border-radius: 8px; font-style: italic; box-shadow: 0 0 15px var(--dorado-glow); }
 
-        .container { width: 90%; max-width: 450px; margin-top: 40px; }
+        .container { width: 95%; max-width: 450px; margin-top: 30px; }
 
         .card { 
-            background: var(--negro-card); padding: 35px; border-radius: 24px; 
+            background: var(--negro-card); padding: 30px; border-radius: 24px; 
             border: 1px solid #333; text-align: center; margin-bottom: 20px;
         }
 
@@ -56,13 +55,14 @@
             text-transform: uppercase; letter-spacing: 1px;
         }
 
-        /* HISTORIAL PROTEGIDO */
+        /* PEDIDOS CON UBICACIÓN */
         .pedido-item { 
             background: var(--negro-card); border: 1px solid #222; 
             padding: 25px; border-radius: 20px; margin-bottom: 15px; text-align: left;
         }
         .status-badge { font-size: 0.6rem; font-weight: 900; color: var(--verde-verificado); border: 1px solid var(--verde-verificado); padding: 2px 8px; border-radius: 4px; float: right; }
         .prod-name { font-size: 1.3rem; font-weight: 900; color: var(--amarillo); text-transform: uppercase; display: block; }
+        .loc-tag { font-size: 0.8rem; color: #fff; margin-top: 5px; display: block; }
         .details { font-size: 0.85rem; color: var(--gris-texto); margin: 10px 0; line-height: 1.5; }
 
         .btn-offer { 
@@ -72,7 +72,6 @@
         }
 
         .legal-link { font-size: 0.7rem; color: var(--gris-texto); cursor: pointer; margin-top: 20px; text-decoration: underline; display: block; text-align: center; }
-        #legalModal { display: none; font-size: 0.8rem; color: #ccc; text-align: left; background: #000; padding: 20px; border-radius: 15px; border: 1px solid #444; margin-top: 20px; }
         .logout-btn { color: var(--rojo-status); font-size: 0.7rem; cursor: pointer; margin-top: 30px; opacity: 0.6; text-align: center; }
     </style>
 </head>
@@ -91,42 +90,26 @@
                 <input type="password" id="pass" placeholder="Contraseña" required minlength="6">
                 <button type="submit" class="btn-main" id="btnAuth">OBTENER CÓDIGO</button>
             </form>
-            <p class="legal-link" onclick="toggleMode()" id="switchBtn">¿Nuevo usuario? Crear cuenta</p>
-        </div>
-
-        <div id="otpSection" class="card" style="display:none;">
-            <h2>VALIDAR <span>IDENTIDAD REAL</span></h2>
-            <p style="font-size:0.8rem; color:var(--gris-texto); margin-bottom:15px;">Ingresa los 6 números enviados a tu email.</p>
-            <input type="text" id="otpCode" placeholder="000000" maxlength="6" style="text-align: center; letter-spacing: 8px; font-size: 1.5rem;">
-            <button class="btn-main" onclick="verifyOTP()">VERIFICAR E INGRESAR</button>
+            <p class="legal-link" onclick="toggleMode()">¿Nuevo usuario? Crear cuenta</p>
         </div>
 
         <div id="mainPanel" style="display: none;">
             <div class="card">
-                <h2>Publica lo que buscas y nuestra red <br><span>competirán por el precio más bajo.</span></h2>
+                <h2>Publica lo que buscas y nuestra red <br><span>competirá por el precio.</span></h2>
                 <form id="orderForm">
-                    <input type="text" id="prod" placeholder="Nombre del artículo" required>
-                    <input type="number" id="cant" placeholder="Cantidad (unidades)" required>
+                    <input type="text" id="prod" placeholder="¿Qué estás buscando?" required>
+                    <input type="number" id="cant" placeholder="Cantidad" required>
                     <button type="submit" class="btn-main">LANZAR AL MERCADO</button>
                 </form>
             </div>
 
             <div id="feed"></div>
-            
-            <p class="legal-link" onclick="toggleLegal()">Ver Términos, Privacidad y Protección Legal</p>
-            <div id="legalModal">
-                <strong>TÉRMINOS Y CONDICIONES (WANTED)</strong><br><br>
-                - <strong>Naturaleza:</strong> Plataforma de conexión encriptada entre oferta y demanda.<br>
-                - <strong>Tasa:</strong> El pago de $3,73 USD es por el derecho de revelación de contacto.<br>
-                - <strong>Privacidad:</strong> Identidades protegidas hasta la validación del pago.<br>
-                - <strong>Reembolsos:</strong> No aplicables una vez revelada la información del comprador.
-            </div>
             <p class="logout-btn" onclick="signOut()">CERRAR SESIÓN SEGURA</p>
         </div>
 
-        <div id="adminPanel" style="display:none; border-top: 1px dashed var(--amarillo); padding: 20px;">
-            <h3 style="color: var(--amarillo)">ADMIN: CONTROL DE DATOS</h3>
-            <div id="adminList" style="font-size: 0.7rem; color: #fff; overflow: auto;"></div>
+        <div id="adminPanel" style="display:none; padding: 20px; border-top: 1px dashed var(--amarillo);">
+            <h3 style="color:var(--amarillo)">ADMIN PANEL</h3>
+            <div id="adminList" style="font-size:0.7rem; color:#fff; overflow:auto;"></div>
         </div>
     </div>
 
@@ -139,47 +122,24 @@
         const { createClient } = supabase;
         const _supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-        let modeLogin = true;
-
-        function toggleMode() {
-            modeLogin = !modeLogin;
-            document.getElementById('authTitle').innerHTML = modeLogin ? 'ACCESO <span>SISTEMA OTP</span>' : 'REGISTRO <span>IDENTIDAD REAL</span>';
-            document.getElementById('btnAuth').innerText = modeLogin ? 'OBTENER CÓDIGO' : 'REGISTRARME';
-        }
-
-        function toggleLegal() {
-            const m = document.getElementById('legalModal');
-            m.style.display = m.style.display === 'block' ? 'none' : 'block';
+        async function getUbicacion() {
+            try {
+                const res = await fetch('https://ipapi.co/json/');
+                const data = await res.json();
+                return `${data.city}, ${data.region}`;
+            } catch (e) { return "Ubicación no disponible"; }
         }
 
         document.getElementById('authForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const email = document.getElementById('email').value;
             const password = document.getElementById('pass').value;
-            if (modeLogin) {
-                const { error } = await _supabase.auth.signInWithPassword({ email, password });
-                if (error) alert(error.message);
-            } else {
-                const { error } = await _supabase.auth.signUp({ email, password });
-                if (error) alert(error.message);
-                else {
-                    document.getElementById('authSection').style.display = 'none';
-                    document.getElementById('otpSection').style.display = 'block';
-                }
+            const { error } = await _supabase.auth.signInWithPassword({ email, password });
+            if (error) {
+                const { error: signUpErr } = await _supabase.auth.signUp({ email, password });
+                if (signUpErr) alert(signUpErr.message); else alert("Código enviado al email.");
             }
         });
-
-        async function verifyOTP() {
-            const token = document.getElementById('otpCode').value;
-            const email = document.getElementById('email').value;
-            const { error } = await _supabase.auth.verifyOtp({ email, token, type: 'signup' });
-            if (error) alert("Código inválido."); else location.reload();
-        }
-
-        async function sendAlert(prod, cant, user) {
-            const msg = `🚨 WANTED: NUEVO PEDIDO\n📦 Art: ${prod}\n🔢 Cant: ${cant}\n👤 User: ${user}`;
-            fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage?chat_id=${TELEGRAM_CHAT_ID}&text=${encodeURIComponent(msg)}`);
-        }
 
         _supabase.auth.onAuthStateChange((event, session) => {
             if (session) {
@@ -194,12 +154,13 @@
             const feed = document.getElementById('feed');
             feed.innerHTML = '';
             data.forEach(p => {
-                const idOculto = p.nombre.charAt(0) + "********"; // BLINDAJE DE IDENTIDAD
+                const idOculto = p.nombre.charAt(0) + "********";
                 const card = document.createElement('div');
                 card.className = 'pedido-item';
                 card.innerHTML = `
-                    <span class="status-badge">IDENTIDAD ENCRIPTADA</span>
+                    <span class="status-badge">UBICACIÓN VERIFICADA</span>
                     <span class="prod-name">${p.producto}</span>
+                    <span class="loc-tag">📍 ${p.ubicacion || 'Argentina'}</span>
                     <p class="details">Cant: ${p.cantidad} u.<br>ID Comprador: <span style="color:var(--verde-verificado)">${idOculto}</span></p>
                     <button class="btn-offer" onclick="window.location.href='https://www.dlocalgo.com/'">
                         REVELAR CONTACTO <span>$ 3,73 USD</span>
@@ -214,32 +175,24 @@
             const { data: { user } } = await _supabase.auth.getUser();
             const prod = document.getElementById('prod').value;
             const cant = document.getElementById('cant').value;
-            const { error } = await _supabase.from('pedidos').insert([{ nombre: user.email, producto: prod, cantidad: parseInt(cant) }]);
+            const ubi = await getUbicacion();
+            
+            const { error } = await _supabase.from('pedidos').insert([{ 
+                nombre: user.email, producto: prod, cantidad: parseInt(cant), ubicacion: ubi 
+            }]);
+            
             if (!error) {
-                sendAlert(prod, cant, user.email);
+                const msg = `🚨 WANTED: NUEVO PEDIDO\n📦 Art: ${prod}\n🔢 Cant: ${cant}\n📍 Loc: ${ubi}\n👤 User: ${user.email}`;
+                fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage?chat_id=${TELEGRAM_CHAT_ID}&text=${encodeURIComponent(msg)}`);
                 document.getElementById('orderForm').reset();
                 renderPedidos();
-                alert("Pedido lanzado al mercado.");
             }
         });
 
         function signOut() { _supabase.auth.signOut(); location.reload(); }
-
         let clicks = 0;
-        function toggleAdmin() {
-            clicks++;
-            if (clicks >= 5) {
-                const p = prompt("Admin Pass:");
-                if (p === "wanted2026") {
-                    document.getElementById('adminPanel').style.display = 'block';
-                    loadAdminData();
-                }
-            }
-        }
-        async function loadAdminData() {
-            const { data } = await _supabase.from('pedidos').select('*');
-            document.getElementById('adminList').innerHTML = `<pre>${JSON.stringify(data, null, 2)}</pre>`;
-        }
+        function toggleAdmin() { clicks++; if(clicks>=5) { const p = prompt("Pass:"); if(p==="wanted2026"){ document.getElementById('adminPanel').style.display='block'; loadAdminData(); } } }
+        async function loadAdminData() { const { data } = await _supabase.from('pedidos').select('*'); document.getElementById('adminList').innerHTML = `<pre>${JSON.stringify(data, null, 2)}</pre>`; }
     </script>
 </body>
-                                                                                                        </html>
+                </html>
