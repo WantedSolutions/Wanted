@@ -23,9 +23,9 @@
             color: var(--blanco); 
             font-family: 'Inter', sans-serif;
             margin: 0; display: flex; flex-direction: column; align-items: center; min-height: 100vh;
+            overflow-x: hidden;
         }
 
-        /* HEADER FINTECH */
         header {
             width: 100%; padding: 20px 40px; display: flex; justify-content: space-between;
             align-items: center; border-bottom: 1px solid #222; background: rgba(0,0,0,0.98);
@@ -41,7 +41,7 @@
             border: 1px solid #333; text-align: center; margin-bottom: 20px;
         }
 
-        h2 { font-size: 1.4rem; font-weight: 800; line-height: 1.3; margin-bottom: 20px; }
+        h2 { font-size: 1.2rem; font-weight: 800; line-height: 1.3; margin-bottom: 20px; }
         h2 span { color: var(--amarillo); }
 
         input { 
@@ -49,7 +49,6 @@
             border: 1px solid #333; border-radius: 12px; color: #fff; box-sizing: border-box;
             font-size: 1rem; transition: 0.3s;
         }
-        input:focus { border-color: var(--amarillo); outline: none; box-shadow: 0 0 10px var(--dorado-glow); }
 
         .btn-main { 
             width: 100%; padding: 20px; background: var(--amarillo); color: #000; 
@@ -57,30 +56,23 @@
             text-transform: uppercase; letter-spacing: 1px;
         }
 
-        /* OTP INPUT */
-        .otp-box { display: none; }
-        .otp-text { font-size: 0.8rem; color: var(--gris-texto); margin-bottom: 15px; }
-
-        /* HISTORIAL */
+        /* HISTORIAL PROTEGIDO */
         .pedido-item { 
             background: var(--negro-card); border: 1px solid #222; 
             padding: 25px; border-radius: 20px; margin-bottom: 15px; text-align: left;
         }
         .status-badge { font-size: 0.6rem; font-weight: 900; color: var(--verde-verificado); border: 1px solid var(--verde-verificado); padding: 2px 8px; border-radius: 4px; float: right; }
         .prod-name { font-size: 1.3rem; font-weight: 900; color: var(--amarillo); text-transform: uppercase; display: block; }
-        .details { font-size: 0.85rem; color: var(--gris-texto); margin: 10px 0; }
+        .details { font-size: 0.85rem; color: var(--gris-texto); margin: 10px 0; line-height: 1.5; }
 
-        /* BOTÓN VENDEDOR */
         .btn-offer { 
             width: 100%; background: #fff; color: #000; padding: 15px; 
             border-radius: 10px; font-weight: 900; border: none; cursor: pointer;
             display: flex; justify-content: space-between; align-items: center; margin-top: 10px;
         }
 
-        /* LEGALES */
-        .legal-link { font-size: 0.7rem; color: var(--gris-texto); cursor: pointer; margin-top: 20px; text-decoration: underline; display: block; }
+        .legal-link { font-size: 0.7rem; color: var(--gris-texto); cursor: pointer; margin-top: 20px; text-decoration: underline; display: block; text-align: center; }
         #legalModal { display: none; font-size: 0.8rem; color: #ccc; text-align: left; background: #000; padding: 20px; border-radius: 15px; border: 1px solid #444; margin-top: 20px; }
-
         .logout-btn { color: var(--rojo-status); font-size: 0.7rem; cursor: pointer; margin-top: 30px; opacity: 0.6; text-align: center; }
     </style>
 </head>
@@ -95,17 +87,17 @@
         <div id="authSection" class="card">
             <h2 id="authTitle">ACCESO <span>SISTEMA OTP</span></h2>
             <form id="authForm">
-                <input type="email" id="email" placeholder="Email institucional/personal" required>
-                <input type="password" id="pass" placeholder="Contraseña de seguridad" required minlength="6">
+                <input type="email" id="email" placeholder="Email" required>
+                <input type="password" id="pass" placeholder="Contraseña" required minlength="6">
                 <button type="submit" class="btn-main" id="btnAuth">OBTENER CÓDIGO</button>
             </form>
-            <p class="legal-link" onclick="toggleMode()" id="switchBtn" style="text-align: center;">¿Nuevo usuario? Crear cuenta</p>
+            <p class="legal-link" onclick="toggleMode()" id="switchBtn">¿Nuevo usuario? Crear cuenta</p>
         </div>
 
-        <div id="otpSection" class="card otp-box">
+        <div id="otpSection" class="card" style="display:none;">
             <h2>VALIDAR <span>IDENTIDAD REAL</span></h2>
-            <p class="otp-text">Ingresa los 6 números enviados a tu email para desbloquear la conexión encriptada.</p>
-            <input type="text" id="otpCode" placeholder="000000" maxlength="6" style="text-align: center; letter-spacing: 10px; font-size: 1.5rem;">
+            <p style="font-size:0.8rem; color:var(--gris-texto); margin-bottom:15px;">Ingresa los 6 números enviados a tu email.</p>
+            <input type="text" id="otpCode" placeholder="000000" maxlength="6" style="text-align: center; letter-spacing: 8px; font-size: 1.5rem;">
             <button class="btn-main" onclick="verifyOTP()">VERIFICAR E INGRESAR</button>
         </div>
 
@@ -121,21 +113,19 @@
 
             <div id="feed"></div>
             
-            <p class="legal-link" onclick="toggleLegal()" style="text-align: center;">Ver Términos, Privacidad y Protección Legal</p>
+            <p class="legal-link" onclick="toggleLegal()">Ver Términos, Privacidad y Protección Legal</p>
             <div id="legalModal">
                 <strong>TÉRMINOS Y CONDICIONES (WANTED)</strong><br><br>
-                1. <strong>Naturaleza:</strong> WANTED es una plataforma de conexión encriptada. No vende productos.<br>
-                2. <strong>Tasa de Conexión:</strong> El pago de $3,73 USD otorga el derecho de contacto con el comprador.<br>
-                3. <strong>No Reembolso:</strong> Dada la naturaleza digital del dato, una vez revelado el contacto, no hay devoluciones.<br>
-                4. <strong>Privacidad:</strong> Los datos se encriptan bajo estándares bancarios.<br>
-                5. <strong>Responsabilidad:</strong> WANTED no se responsabiliza por la calidad del producto final.
+                - <strong>Naturaleza:</strong> Plataforma de conexión encriptada entre oferta y demanda.<br>
+                - <strong>Tasa:</strong> El pago de $3,73 USD es por el derecho de revelación de contacto.<br>
+                - <strong>Privacidad:</strong> Identidades protegidas hasta la validación del pago.<br>
+                - <strong>Reembolsos:</strong> No aplicables una vez revelada la información del comprador.
             </div>
-            
             <p class="logout-btn" onclick="signOut()">CERRAR SESIÓN SEGURA</p>
         </div>
 
         <div id="adminPanel" style="display:none; border-top: 1px dashed var(--amarillo); padding: 20px;">
-            <h3 style="color: var(--amarillo)">TABLERO DE CONTROL ADMIN</h3>
+            <h3 style="color: var(--amarillo)">ADMIN: CONTROL DE DATOS</h3>
             <div id="adminList" style="font-size: 0.7rem; color: #fff; overflow: auto;"></div>
         </div>
     </div>
@@ -143,8 +133,6 @@
     <script>
         const SUPABASE_URL = 'https://gtngqwnbyjqqmuzsztnv.supabase.co';
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd0bmdxd25ieWpxcW11enN6dG52Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMzNjgyMzksImV4cCI6MjA4ODk0NDIzOX0.vSxxHrayzEJG_HwRXcyOCb5vZuDZksrQe6GnAwhYD1w';
-        
-        // TUS CREDENCIALES DE TELEGRAM INTEGRADAS
         const TELEGRAM_TOKEN = '8639151291:AAH0njnCbBeGhOd90ZFUnPUFLWS1W-t37AE';
         const TELEGRAM_CHAT_ID = '7660494923';
 
@@ -168,7 +156,6 @@
             e.preventDefault();
             const email = document.getElementById('email').value;
             const password = document.getElementById('pass').value;
-
             if (modeLogin) {
                 const { error } = await _supabase.auth.signInWithPassword({ email, password });
                 if (error) alert(error.message);
@@ -186,19 +173,17 @@
             const token = document.getElementById('otpCode').value;
             const email = document.getElementById('email').value;
             const { error } = await _supabase.auth.verifyOtp({ email, token, type: 'signup' });
-            if (error) alert("Código inválido o expirado.");
-            else location.reload();
+            if (error) alert("Código inválido."); else location.reload();
         }
 
         async function sendAlert(prod, cant, user) {
-            const msg = `🚨 NUEVO PEDIDO EN WANTED\n\n📦 Articulo: ${prod}\n🔢 Cantidad: ${cant}\n👤 Comprador: ${user}`;
+            const msg = `🚨 WANTED: NUEVO PEDIDO\n📦 Art: ${prod}\n🔢 Cant: ${cant}\n👤 User: ${user}`;
             fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage?chat_id=${TELEGRAM_CHAT_ID}&text=${encodeURIComponent(msg)}`);
         }
 
         _supabase.auth.onAuthStateChange((event, session) => {
             if (session) {
                 document.getElementById('authSection').style.display = 'none';
-                document.getElementById('otpSection').style.display = 'none';
                 document.getElementById('mainPanel').style.display = 'block';
                 renderPedidos();
             }
@@ -209,14 +194,15 @@
             const feed = document.getElementById('feed');
             feed.innerHTML = '';
             data.forEach(p => {
+                const idOculto = p.nombre.charAt(0) + "********"; // BLINDAJE DE IDENTIDAD
                 const card = document.createElement('div');
                 card.className = 'pedido-item';
                 card.innerHTML = `
-                    <span class="status-badge">COMPRADOR VERIFICADO</span>
+                    <span class="status-badge">IDENTIDAD ENCRIPTADA</span>
                     <span class="prod-name">${p.producto}</span>
-                    <p class="details">Cant. solicitada: ${p.cantidad} unidades<br>ID Comprador: ${p.nombre.split('@')[0]}***</p>
+                    <p class="details">Cant: ${p.cantidad} u.<br>ID Comprador: <span style="color:var(--verde-verificado)">${idOculto}</span></p>
                     <button class="btn-offer" onclick="window.location.href='https://www.dlocalgo.com/'">
-                        OFERTAR AL COMPRADOR <span>$ 3,73 USD</span>
+                        REVELAR CONTACTO <span>$ 3,73 USD</span>
                     </button>
                 `;
                 feed.appendChild(card);
@@ -228,16 +214,12 @@
             const { data: { user } } = await _supabase.auth.getUser();
             const prod = document.getElementById('prod').value;
             const cant = document.getElementById('cant').value;
-            
-            const { error } = await _supabase.from('pedidos').insert([{ 
-                nombre: user.email, producto: prod, cantidad: parseInt(cant) 
-            }]);
-            
+            const { error } = await _supabase.from('pedidos').insert([{ nombre: user.email, producto: prod, cantidad: parseInt(cant) }]);
             if (!error) {
                 sendAlert(prod, cant, user.email);
                 document.getElementById('orderForm').reset();
                 renderPedidos();
-                alert("Pedido lanzado al mercado con éxito.");
+                alert("Pedido lanzado al mercado.");
             }
         });
 
@@ -247,7 +229,7 @@
         function toggleAdmin() {
             clicks++;
             if (clicks >= 5) {
-                const p = prompt("Acceso Admin:");
+                const p = prompt("Admin Pass:");
                 if (p === "wanted2026") {
                     document.getElementById('adminPanel').style.display = 'block';
                     loadAdminData();
@@ -260,4 +242,4 @@
         }
     </script>
 </body>
-    </html>
+                                                                                                        </html>
